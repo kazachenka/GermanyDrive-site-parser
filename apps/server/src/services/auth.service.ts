@@ -1,27 +1,21 @@
-import { getDb } from '../../db'
-import { createAccessToken } from '../../lib/jwt'
+import { getDb } from '../db'
+import { createAccessToken } from '../lib/jwt'
 import {
 	createRefreshToken,
 	hashPassword,
 	sha256,
 	verifyPassword,
-} from '../../lib/crypto'
-import {
-	createSession,
-	createUser,
-	findActiveSessionByRefreshTokenHash,
-	findUserByEmail,
-	findUserById,
-	revokeSessionById,
-	revokeSessionByRefreshTokenHash,
-} from './auth.repository'
-import type { Bindings } from '../../types/app'
+} from '../lib/crypto'
+import type { Bindings } from '../types/app'
 import type {
 	LoginRequestDto,
 	LogoutRequestDto,
 	RefreshRequestDto,
 	RegisterRequestDto,
 } from '@site-parser/shared'
+import { createUser } from "../repositories/user.resitory";
+import { createSession, findActiveSession, revokeByToken, revokeSession } from "../repositories/session.repository";
+import {findUserByEmail, findUserById} from "../utils/auth.service.utils";
 
 function getNowIso() {
 	return new Date().toISOString()
@@ -148,7 +142,7 @@ export async function refreshSession(
 	const refreshTokenHash = await sha256(payload.refreshToken)
 	const now = getNowIso()
 
-	const session = await findActiveSessionByRefreshTokenHash(db, refreshTokenHash, now)
+	const session = await findActiveSession(db, refreshTokenHash, now)
 	if (!session) {
 		return { error: { message: 'invalid refresh token', status: 401 } }
 	}
@@ -158,7 +152,7 @@ export async function refreshSession(
 		return { error: { message: 'user not found', status: 404 } }
 	}
 
-	await revokeSessionById(db, session.id, now)
+	await revokeSession(db, session.id, now)
 
 	const newRefreshToken = createRefreshToken()
 	const newRefreshTokenHash = await sha256(newRefreshToken)
@@ -197,7 +191,7 @@ export async function logoutUser(
 
 	const refreshTokenHash = await sha256(payload.refreshToken)
 
-	await revokeSessionByRefreshTokenHash(db, refreshTokenHash, getNowIso())
+	await revokeByToken(db, refreshTokenHash, getNowIso())
 
 	return { data: { ok: true as const } }
 }

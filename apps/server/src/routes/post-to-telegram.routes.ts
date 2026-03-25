@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
-import type { Bindings } from '../../types/app'
-import { sendTelegramMessage } from '../../lib/telegram'
+import type { Bindings } from '../types/app'
+import { sendTelegramMessage } from '../lib/telegram'
 
 const telegramRoutes = new Hono<{ Bindings: Bindings }>()
 

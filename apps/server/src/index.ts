@@ -1,7 +1,8 @@
 import { Hono } from 'hono'
 import type { Bindings } from './types/app'
-import { authRoutes } from './modules/auth'
-import telegramRoutes from './modules/post-to-telegram/post-to-telegram.routes'
+
+import telegramRoutes from './routes/post-to-telegram.routes'
+import authRoutes from "./routes/auth.routes";
 
 const app = new Hono<{ Bindings: Bindings }>()
 
