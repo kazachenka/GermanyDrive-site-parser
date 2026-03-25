@@ -16,6 +16,7 @@
 		"wrangler": "^4.77.0"
 	},
 	"dependencies": {
+		"@site-parser/shared": "workspace:*",
 		"drizzle-orm": "^0.45.1",
 		"hono": "^4.12.9"
 	}
