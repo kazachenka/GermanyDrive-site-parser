@@ -1,6 +1,6 @@
 import {createAsyncThunk} from "@reduxjs/toolkit"
 import type {LoginRequestDto, RegisterRequestDto} from '@site-parser/shared'
-import {getMeRequest, loginRequest, logoutRequest, registerRequest, testBot} from "./authApi"
+import {getMeRequest, loginRequest, logoutRequest, registerRequest} from "./authApi"
 
 function getErrorMessage(error: unknown): string {
     if (error instanceof Error) return error.message
