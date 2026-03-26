@@ -1,0 +1,41 @@
+.header {
+    margin-bottom: 20px;
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.cardTitle {
+    margin: 0 0 6px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.cardSubtitle {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.error {
+    color: var(--danger);
+    font-size: 13px;
+}
+
+.footer {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+
+.link {
+    color: #93c5fd;
+    font-weight: 500;
+}

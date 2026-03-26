@@ -1,0 +1,21 @@
+:root {
+    --bg-primary: #1e293b;
+    --bg-secondary: #0f172a;
+
+    --surface: rgba(30, 41, 59, 0.85);
+    --surface-border: rgba(255, 255, 255, 0.12);
+
+    --text-primary: #ffffff;
+    --text-secondary: #e2e8f0;
+    --text-muted: #cbd5e1;
+
+    --accent: #3b82f6;
+    --accent-hover: #2563eb;
+
+    --danger: #f87171;
+
+    --radius-md: 14px;
+    --radius-lg: 20px;
+
+    --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.25);
+}

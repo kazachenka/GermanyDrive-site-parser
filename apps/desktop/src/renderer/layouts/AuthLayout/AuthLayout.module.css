@@ -1,0 +1,42 @@
+.page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 32px;
+
+    background: linear-gradient(
+            160deg,
+            #334155 0%,
+            #1e293b 60%,
+            #0f172a 100%
+    );
+    color: var(--text-primary);
+}
+
+.container {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.header {
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.title {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.subtitle {
+    margin-top: 8px;
+    color: var(--text-secondary);
+    font-size: 14px;
+}

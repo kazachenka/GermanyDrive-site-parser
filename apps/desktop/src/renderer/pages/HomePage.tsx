@@ -1,7 +1,7 @@
-// apps/desktop/src/renderer/pages/HomePage.tsx
 import { useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../app/hooks"
 import { logoutThunk } from "../features/auth/authThunks"
+import {AppButton} from "../shared/ui/AppButton/AppButton.tsx";
 
 export function HomePage() {
     const navigate = useNavigate()
@@ -17,7 +17,7 @@ export function HomePage() {
         <div style={{ padding: 24 }}>
             <h1>Главная</h1>
             <p>Вы вошли как: {user?.email}</p>
-            <button onClick={handleLogout}>Выйти</button>
+            <AppButton onClick={handleLogout}>Выйти</AppButton>
         </div>
     )
 }
