@@ -3,6 +3,7 @@ import type {
     RegisterRequestDto,
     UserDto,
 } from "@site-parser/shared";
+import { AUTH_ACTIONS } from "./auth.constants.ts";
 
 export interface AuthState {
     user: UserDto | null;
@@ -11,19 +12,22 @@ export interface AuthState {
     error: string | null;
 }
 
+export type AuthActionType =
+    typeof AUTH_ACTIONS[keyof typeof AUTH_ACTIONS];
+
 export type AuthAction =
-    | { type: "AUTH_REQUEST" }
-    | { type: "AUTH_INIT_COMPLETE" }
-    | { type: "LOGIN_SUCCESS"; payload: UserDto }
-    | { type: "REGISTER_SUCCESS"; payload: UserDto }
-    | { type: "FETCH_ME_SUCCESS"; payload: UserDto }
-    | { type: "LOGIN_FAILURE"; payload: string | null }
-    | { type: "REGISTER_FAILURE"; payload: string | null }
-    | { type: "FETCH_ME_FAILURE"; payload: string | null }
-    | { type: "LOGOUT_REQUEST" }
-    | { type: "LOGOUT_SUCCESS" }
-    | { type: "LOGOUT_FAILURE"; payload: string | null }
-    | { type: "CLEAR_AUTH_ERROR" };
+    | { type: typeof AUTH_ACTIONS.AUTH_REQUEST }
+    | { type: typeof AUTH_ACTIONS.AUTH_INIT_COMPLETE }
+    | { type: typeof AUTH_ACTIONS.LOGIN_SUCCESS; payload: UserDto }
+    | { type: typeof AUTH_ACTIONS.LOGIN_FAILURE; payload: string | null }
+    | { type: typeof AUTH_ACTIONS.REGISTER_SUCCESS; payload: UserDto }
+    | { type: typeof AUTH_ACTIONS.REGISTER_FAILURE; payload: string | null }
+    | { type: typeof AUTH_ACTIONS.FETCH_ME_SUCCESS; payload: UserDto }
+    | { type: typeof AUTH_ACTIONS.FETCH_ME_FAILURE; payload: string | null }
+    | { type: typeof AUTH_ACTIONS.LOGOUT_REQUEST }
+    | { type: typeof AUTH_ACTIONS.LOGOUT_SUCCESS }
+    | { type: typeof AUTH_ACTIONS.LOGOUT_FAILURE; payload: string | null }
+    | { type: typeof AUTH_ACTIONS.CLEAR_AUTH_ERROR };
 
 export type LoginPayload = LoginRequestDto;
 export type RegisterPayload = RegisterRequestDto;

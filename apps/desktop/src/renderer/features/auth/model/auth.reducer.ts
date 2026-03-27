@@ -1,4 +1,5 @@
 import type { AuthAction, AuthState } from "./auth.types";
+import { AUTH_ACTIONS } from "./auth.constants.ts";
 
 export const initialAuthState: AuthState = {
     user: null,
@@ -12,15 +13,15 @@ export function authReducer(
     action: AuthAction
 ): AuthState {
     switch (action.type) {
-        case "AUTH_REQUEST":
-        case "LOGOUT_REQUEST":
+        case AUTH_ACTIONS.AUTH_REQUEST:
+        case AUTH_ACTIONS.LOGOUT_REQUEST:
             return {
                 ...state,
                 isLoading: true,
                 error: null,
             };
 
-        case "AUTH_INIT_COMPLETE":
+        case AUTH_ACTIONS.AUTH_INIT_COMPLETE:
             return {
                 ...state,
                 initialized: true,
@@ -28,17 +29,8 @@ export function authReducer(
                 error: null,
             };
 
-        case "LOGIN_SUCCESS":
-        case "REGISTER_SUCCESS":
-            return {
-                ...state,
-                user: action.payload,
-                isLoading: false,
-                initialized: true,
-                error: null,
-            };
-
-        case "FETCH_ME_SUCCESS":
+        case AUTH_ACTIONS.LOGIN_SUCCESS:
+        case AUTH_ACTIONS.REGISTER_SUCCESS:
             return {
                 ...state,
                 user: action.payload,
@@ -47,21 +39,30 @@ export function authReducer(
                 error: null,
             };
 
-        case "LOGIN_FAILURE":
+        case AUTH_ACTIONS.FETCH_ME_SUCCESS:
+            return {
+                ...state,
+                user: action.payload,
+                isLoading: false,
+                initialized: true,
+                error: null,
+            };
+
+        case AUTH_ACTIONS.LOGIN_FAILURE:
             return {
                 ...state,
                 isLoading: false,
                 error: action.payload ?? "Login failed",
             };
 
-        case "REGISTER_FAILURE":
+        case AUTH_ACTIONS.REGISTER_FAILURE:
             return {
                 ...state,
                 isLoading: false,
                 error: action.payload ?? "Register failed",
             };
 
-        case "FETCH_ME_FAILURE":
+        case AUTH_ACTIONS.FETCH_ME_FAILURE:
             return {
                 ...state,
                 user: null,
@@ -70,7 +71,7 @@ export function authReducer(
                 error: action.payload ?? null,
             };
 
-        case "LOGOUT_SUCCESS":
+        case AUTH_ACTIONS.LOGOUT_SUCCESS:
             return {
                 ...state,
                 user: null,
@@ -79,7 +80,7 @@ export function authReducer(
                 error: null,
             };
 
-        case "LOGOUT_FAILURE":
+        case AUTH_ACTIONS.LOGOUT_FAILURE:
             return {
                 ...state,
                 user: null,
@@ -88,7 +89,7 @@ export function authReducer(
                 error: action.payload ?? "Logout failed",
             };
 
-        case "CLEAR_AUTH_ERROR":
+        case AUTH_ACTIONS.CLEAR_AUTH_ERROR:
             return {
                 ...state,
                 error: null,
