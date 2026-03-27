@@ -2,6 +2,7 @@
 const electron = require("electron");
 const node_path = require("node:path");
 let accessToken = null;
+let refreshToken = null;
 function registerAuthIpcHandlers() {
   electron.ipcMain.handle("auth:get-token", async () => {
     return accessToken;
@@ -10,7 +11,15 @@ function registerAuthIpcHandlers() {
     accessToken = token;
     return true;
   });
+  electron.ipcMain.handle("auth:get-refresh-token", async () => {
+    return refreshToken;
+  });
+  electron.ipcMain.handle("auth:set-refresh-token", async (_event, token) => {
+    refreshToken = token;
+    return true;
+  });
   electron.ipcMain.handle("auth:clear-token", async () => {
+    refreshToken = null;
     accessToken = null;
     return true;
   });

@@ -12,7 +12,8 @@ export const loginThunk = createAsyncThunk(
     async (data: LoginRequestDto, { rejectWithValue }) => {
         try {
             const response = await loginRequest(data);
-            await window.auth.setToken(response.accessToken);
+            await window.auth.setAccessToken(response.accessToken);
+            await window.auth.setRefreshToken(response.refreshToken);
 
             return response.user;
         } catch (error) {
@@ -26,7 +27,8 @@ export const registerThunk = createAsyncThunk(
     async (data: RegisterRequestDto, { rejectWithValue }) => {
         try {
             const response = await registerRequest(data);
-            await window.auth.setToken(response.accessToken);
+            await window.auth.setAccessToken(response.accessToken);
+            await window.auth.setRefreshToken(response.refreshToken);
 
             return response.user;
         } catch (error) {
@@ -39,7 +41,7 @@ export const fetchMeThunk = createAsyncThunk(
     "auth/fetchMe",
     async (_, { rejectWithValue }) => {
         try {
-            const token = await window.auth.getToken();
+            const token = await window.auth.getAccessToken();
 
             if (!token) {
                 return null;
