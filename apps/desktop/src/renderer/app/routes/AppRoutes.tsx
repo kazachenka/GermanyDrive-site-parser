@@ -1,9 +1,9 @@
 import { Navigate, Route, Routes } from "react-router-dom"
-import { GuestRoute } from "./shared/router/GuestRoute"
-import { ProtectedRoute } from "./shared/router/ProtectedRoute"
-import { LoginPage } from "./pages/LoginPage/LoginPage.tsx"
-import { RegisterPage } from "./pages/RegisterPage/RegisterPage.tsx"
-import { HomePage } from "./pages/HomePage"
+import { GuestRoute } from "../../shared/router/GuestRoute.tsx"
+import { ProtectedRoute } from "../../shared/router/ProtectedRoute.tsx"
+import { LoginPage } from "../../pages/LoginPage/LoginPage.tsx"
+import { RegisterPage } from "../../pages/RegisterPage/RegisterPage.tsx"
+import { HomePage } from "../../pages/HomePage/HomePage.tsx"
 
 export function AppRoutes() {
     return (

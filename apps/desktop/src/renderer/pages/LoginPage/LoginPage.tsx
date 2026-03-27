@@ -1,33 +1,29 @@
-import { useState, type FormEvent } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { useAppDispatch, useAppSelector } from "../../app/hooks"
-import { clearAuthError } from "../../features/auth/authSlice"
-import { loginThunk } from "../../features/auth/authThunks"
-import { AuthLayout } from "../../layouts/AuthLayout/AuthLayout"
-import { AppButton } from "../../shared/ui/AppButton/AppButton"
-import { AppCard } from "../../shared/ui/AppCard/AppCard"
-import { AppInput } from "../../shared/ui/AppInput/AppInput"
-import styles from "./LoginPage.module.css"
+import { useState, type FormEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../features/auth/model/auth.context";
+import { AuthLayout } from "../../layouts/AuthLayout/AuthLayout";
+import { AppButton } from "../../shared/ui/AppButton/AppButton";
+import { AppCard } from "../../shared/ui/AppCard/AppCard";
+import { AppInput } from "../../shared/ui/AppInput/AppInput";
+import styles from "./LoginPage.module.css";
 
 export function LoginPage() {
-    const navigate = useNavigate()
-    const dispatch = useAppDispatch()
-    const { isLoading, error } = useAppSelector((state) => state.auth)
+    const navigate = useNavigate();
+    const { login, isLoading, error, clearAuthError } = useAuth();
 
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+        e.preventDefault();
 
-        dispatch(clearAuthError())
+        clearAuthError();
 
-        const resultAction = await dispatch(loginThunk({ email, password }))
-
-        if (loginThunk.fulfilled.match(resultAction)) {
-            navigate("/")
-        }
-    }
+        try {
+            await login({ email, password });
+            navigate("/");
+        } catch {}
+    };
 
     return (
         <AuthLayout
@@ -74,5 +70,5 @@ export function LoginPage() {
                 </div>
             </AppCard>
         </AuthLayout>
-    )
+    );
 }

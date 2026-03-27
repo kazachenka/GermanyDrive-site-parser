@@ -1,9 +1,10 @@
 "use strict";
 const electron = require("electron");
 electron.contextBridge.exposeInMainWorld("auth", {
-  setAccessToken: (token) => electron.ipcRenderer.invoke("auth:set-token", token),
-  getAccessToken: () => electron.ipcRenderer.invoke("auth:get-token"),
-  setRefreshToken: (token) => electron.ipcRenderer.invoke("auth:set-refresh-token", token),
-  getRefreshToken: () => electron.ipcRenderer.invoke("auth:get-refresh-token"),
-  clearToken: () => electron.ipcRenderer.invoke("auth:clear-token")
+  getAccessToken: () => electron.ipcRenderer.invoke("auth:get-access-token"),
+  hasRefreshToken: () => electron.ipcRenderer.invoke("auth:has-refresh-token"),
+  saveSession: (session) => electron.ipcRenderer.invoke("auth:save-session", session),
+  clearSession: () => electron.ipcRenderer.invoke("auth:clear-session"),
+  refreshSession: () => electron.ipcRenderer.invoke("auth:refresh-session"),
+  logout: () => electron.ipcRenderer.invoke("auth:logout")
 });

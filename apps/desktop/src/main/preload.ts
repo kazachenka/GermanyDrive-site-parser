@@ -1,9 +1,22 @@
-import { contextBridge, ipcRenderer } from "electron"
+import { contextBridge, ipcRenderer } from "electron";
 
 contextBridge.exposeInMainWorld("auth", {
-    setAccessToken: (token: string) => ipcRenderer.invoke("auth:set-token", token),
-    getAccessToken: (): Promise<string | null> => ipcRenderer.invoke("auth:get-token"),
-    setRefreshToken: (token: string) => ipcRenderer.invoke("auth:set-refresh-token", token),
-    getRefreshToken: (): Promise<string | null> => ipcRenderer.invoke("auth:get-refresh-token"),
-    clearToken: () => ipcRenderer.invoke("auth:clear-token")
-})
+    getAccessToken: (): Promise<string | null> =>
+        ipcRenderer.invoke("auth:get-access-token"),
+
+    hasRefreshToken: (): Promise<boolean> =>
+        ipcRenderer.invoke("auth:has-refresh-token"),
+
+    saveSession: (session: {
+        accessToken: string;
+        refreshToken: string;
+    }): Promise<boolean> => ipcRenderer.invoke("auth:save-session", session),
+
+    clearSession: (): Promise<boolean> =>
+        ipcRenderer.invoke("auth:clear-session"),
+
+    refreshSession: (): Promise<boolean> =>
+        ipcRenderer.invoke("auth:refresh-session"),
+
+    logout: (): Promise<boolean> => ipcRenderer.invoke("auth:logout"),
+});

@@ -1,19 +1,13 @@
-import { useEffect } from "react"
 import { BrowserRouter } from "react-router-dom"
-import { useAppDispatch } from "./app/hooks"
-import { fetchMeThunk } from "./features/auth/authThunks"
-import { AppRoutes } from "./AppRoutes"
+import { AppRoutes } from "./app/routes/AppRoutes.tsx"
+import { AppProviders } from "./app/providers/AppProviders.tsx";
 
 export default function App() {
-    const dispatch = useAppDispatch()
-
-    useEffect(() => {
-        void dispatch(fetchMeThunk())
-    }, [dispatch])
-
     return (
-        <BrowserRouter>
-            <AppRoutes />
-        </BrowserRouter>
+        <AppProviders>
+            <BrowserRouter>
+                <AppRoutes />
+            </BrowserRouter>
+        </AppProviders>
     )
 }
