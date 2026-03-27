@@ -11,8 +11,6 @@ export function authReducer(
     state: AuthState,
     action: AuthAction
 ): AuthState {
-    console.log("[authReducer]", action.type, state);
-
     switch (action.type) {
         case "AUTH_REQUEST":
         case "LOGOUT_REQUEST":
