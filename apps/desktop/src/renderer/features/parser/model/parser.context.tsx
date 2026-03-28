@@ -10,7 +10,7 @@ import {
 import { parserApi } from "../api/parser.api";
 import { normalizeParserError } from "../lib/normalize-parser-error";
 import { validateUrl } from "../lib/validate-url";
-import { INITIAL_SITE_PARSER_STATE } from "./parser.constants";
+import {INITIAL_SITE_PARSER_STATE, PARSER_ACTIONS} from "./parser.constants";
 import { siteParserReducer } from "./parser.reducer";
 import type {
     MobileDeRuPostItemType,
@@ -42,7 +42,7 @@ export function SiteParserProvider({
 
             if (!trimmedUrl) {
                 dispatch({
-                    type: "PARSE_ERROR",
+                    type: PARSER_ACTIONS.PARSE_ERROR,
                     payload: { error: "URL is required" },
                 });
                 return;
@@ -50,7 +50,7 @@ export function SiteParserProvider({
 
             if (!validateUrl(trimmedUrl)) {
                 dispatch({
-                    type: "PARSE_ERROR",
+                    type: PARSER_ACTIONS.PARSE_ERROR,
                     payload: { error: "Invalid URL format" },
                 });
                 return;
@@ -68,7 +68,7 @@ export function SiteParserProvider({
             const requestId = ++requestIdRef.current;
 
             dispatch({
-                type: "PARSE_START",
+                type: PARSER_ACTIONS.PARSE_START,
                 payload: { url: trimmedUrl },
             });
 
@@ -80,11 +80,10 @@ export function SiteParserProvider({
                 }
 
                 dispatch({
-                    type: "PARSE_SUCCESS",
+                    type: PARSER_ACTIONS.PARSE_SUCCESS,
                     payload: {
                         url: trimmedUrl,
                         html: result,
-                        parsedData: null,
                     },
                 });
             } catch (error) {
@@ -93,7 +92,7 @@ export function SiteParserProvider({
                 }
 
                 dispatch({
-                    type: "PARSE_ERROR",
+                    type: PARSER_ACTIONS.PARSE_ERROR,
                     payload: {
                         error: normalizeParserError(error),
                     },
@@ -105,12 +104,12 @@ export function SiteParserProvider({
 
     const reset = useCallback(() => {
         requestIdRef.current += 1;
-        dispatch({ type: "RESET" });
+        dispatch({ type: PARSER_ACTIONS.RESET });
     }, []);
 
     const setParsedData = useCallback((data: MobileDeRuPostItemType | null) => {
         dispatch({
-            type: "SET_PARSED_DATA",
+            type: PARSER_ACTIONS.SET_PARSED_DATA,
             payload: { parsedData: data },
         });
     }, []);

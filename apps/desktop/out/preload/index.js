@@ -9,6 +9,5 @@ electron.contextBridge.exposeInMainWorld("auth", {
   logout: () => electron.ipcRenderer.invoke("auth:logout")
 });
 electron.contextBridge.exposeInMainWorld("parse", {
-  getHtmlFromBEForParse: (siteUrl) => electron.ipcRenderer.invoke("parse:get-html-from-be", siteUrl),
   getHtmlByUrlForParse: (siteUrl) => electron.ipcRenderer.invoke("parse:get-html-by-url", siteUrl)
 });

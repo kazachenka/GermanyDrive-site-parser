@@ -1,25 +1,25 @@
 import { MobileDeRuPostItemType, SiteParserState } from "./parser.types";
+import { PARSER_ACTIONS } from "./parser.constants.ts";
 
 type SiteParserAction =
-    | { type: "PARSE_START"; payload: { url: string } }
+    | { type: typeof PARSER_ACTIONS.PARSE_START; payload: { url: string } }
     | {
-    type: "PARSE_SUCCESS";
+    type: typeof PARSER_ACTIONS.PARSE_SUCCESS;
     payload: {
         url: string;
         html: string;
-        parsedData: MobileDeRuPostItemType | null;
     };
 }
-    | { type: "PARSE_ERROR"; payload: { error: string } }
-    | { type: "SET_PARSED_DATA"; payload: { parsedData: MobileDeRuPostItemType | null } }
-    | { type: "RESET" };
+    | { type: typeof PARSER_ACTIONS.PARSE_ERROR; payload: { error: string } }
+    | { type: typeof PARSER_ACTIONS.SET_PARSED_DATA; payload: { parsedData: MobileDeRuPostItemType | null } }
+    | { type: typeof PARSER_ACTIONS.RESET };
 
 export function siteParserReducer(
     state: SiteParserState,
     action: SiteParserAction,
 ): SiteParserState {
     switch (action.type) {
-        case "PARSE_START":
+        case PARSER_ACTIONS.PARSE_START:
             return {
                 ...state,
                 status: "loading",
@@ -27,39 +27,35 @@ export function siteParserReducer(
                 error: null,
             };
 
-        case "PARSE_SUCCESS":
+        case PARSER_ACTIONS.PARSE_SUCCESS:
             return {
                 ...state,
                 status: "success",
                 url: action.payload.url,
                 html: action.payload.html,
-                parsedData: action.payload.parsedData,
                 error: null,
-                lastUpdatedAt: Date.now(),
             };
 
-        case "PARSE_ERROR":
+        case PARSER_ACTIONS.PARSE_ERROR:
             return {
                 ...state,
                 status: "error",
                 error: action.payload.error,
             };
 
-        case "SET_PARSED_DATA":
+        case PARSER_ACTIONS.SET_PARSED_DATA:
             return {
                 ...state,
                 parsedData: action.payload.parsedData,
-                lastUpdatedAt: Date.now(),
             };
 
-        case "RESET":
+        case PARSER_ACTIONS.RESET:
             return {
                 status: "idle",
                 url: null,
                 html: null,
                 parsedData: null,
                 error: null,
-                lastUpdatedAt: null,
             };
 
         default:

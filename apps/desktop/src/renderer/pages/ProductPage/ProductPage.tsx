@@ -2,7 +2,10 @@ import { useSiteParser } from "../../features/parser/model/parser.context.tsx";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getMobileDePageData } from "../../features/parser/lib/parser.utils.ts";
 import { MobileDeRuPostItemType } from "../../features/parser/model/parser.types.ts";
-import { AppButton } from "../../shared/ui/AppButton/AppButton.tsx";
+import { AppButton} from "../../shared/ui/AppButton/AppButton.tsx";
+import {PostLayout} from "../../layouts/PostLayout/PostLayout.tsx";
+import styles from "./ProductPage.module.css";
+import {useNavigate} from "react-router-dom";
 
 export function sanitizeHtml(html: string): string {
     const parser = new DOMParser();
@@ -14,12 +17,18 @@ export function sanitizeHtml(html: string): string {
 }
 
 export function ProductPage() {
-    const { state } = useSiteParser();
+    const { state, reset } = useSiteParser();
+    const navigate = useNavigate();
     const hiddenRef = useRef<HTMLDivElement>(null);
     const [parsedSite, setParsedSite] = useState<MobileDeRuPostItemType | null>(null);
 
     const sentToTelegram = async () => {
 
+    }
+
+    const clickBack = async () => {
+        reset();
+        navigate('/');
     }
 
     const sanitizedHtml = useMemo(() => {
@@ -37,13 +46,8 @@ export function ProductPage() {
 
     }, [sanitizedHtml]);
 
-    useEffect(() => {
-        if (!parsedSite) return;
-        console.log('parsedSite: ', parsedSite);
-    }, [parsedSite]);
-
     return (
-        <div>
+        <div className={styles.wrapper}>
             <div
                 ref={hiddenRef}
                 style={{
@@ -60,9 +64,20 @@ export function ProductPage() {
                 <div dangerouslySetInnerHTML={{ __html: sanitizedHtml }} />
             </div>
 
-            <AppButton onClick={sentToTelegram}>
-                Кнопка
-            </AppButton>
+            {parsedSite && <PostLayout item={parsedSite} />}
+
+            <div className={styles.buttonWrapper}>
+                <AppButton onClick={clickBack}>
+                    Назад
+                </AppButton>
+
+                {parsedSite &&
+                    <AppButton onClick={sentToTelegram}>
+                        Отправить сообщение
+                    </AppButton>
+                }
+            </div>
+
         </div>
     );
 }

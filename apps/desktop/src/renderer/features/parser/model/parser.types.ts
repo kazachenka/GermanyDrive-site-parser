@@ -19,7 +19,6 @@ export interface SiteParserState {
     html: string | null;
     parsedData: MobileDeRuPostItemType | null;
     error: string | null;
-    lastUpdatedAt: number | null;
 }
 
 export interface ParseSitePayload {

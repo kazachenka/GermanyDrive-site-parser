@@ -6,5 +6,13 @@ export const INITIAL_SITE_PARSER_STATE: SiteParserState = {
     html: null,
     parsedData: null,
     error: null,
-    lastUpdatedAt: null,
 };
+
+export const PARSER_ACTIONS = {
+    PARSE_START: "PARSE_START",
+    PARSE_SUCCESS: "PARSE_SUCCESS",
+    PARSE_ERROR: "PARSE_ERROR",
+
+    SET_PARSED_DATA: "SET_PARSED_DATA",
+    RESET: "RESET"
+} as const;
