@@ -4,6 +4,7 @@ import { ProtectedRoute } from "../../shared/router/ProtectedRoute.tsx"
 import { LoginPage } from "../../pages/LoginPage/LoginPage.tsx"
 import { RegisterPage } from "../../pages/RegisterPage/RegisterPage.tsx"
 import { HomePage } from "../../pages/HomePage/HomePage.tsx"
+import {ProductPage} from "../../pages/ProductPage/ProductPage.tsx";
 
 export function AppRoutes() {
     return (
@@ -22,6 +23,14 @@ export function AppRoutes() {
                     <GuestRoute>
                         <RegisterPage />
                     </GuestRoute>
+                }
+            />
+            <Route
+                path="/product"
+                element={
+                    <ProtectedRoute>
+                        <ProductPage />
+                    </ProtectedRoute>
                 }
             />
             <Route

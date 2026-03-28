@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from "electron"
 import { join } from "node:path"
 import { registerAuthIpcHandlers } from "./ipc/auth"
+import { registerParseIpcHandlers } from "./ipc/parse";
 
 function createWindow() {
     const win = new BrowserWindow({
@@ -19,6 +20,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+    registerParseIpcHandlers()
     registerAuthIpcHandlers()
     createWindow()
 })

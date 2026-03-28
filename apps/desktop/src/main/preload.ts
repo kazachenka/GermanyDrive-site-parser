@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from "electron";
+import electron, { contextBridge, ipcRenderer } from "electron";
 
 contextBridge.exposeInMainWorld("auth", {
     getAccessToken: (): Promise<string | null> =>
@@ -19,4 +19,9 @@ contextBridge.exposeInMainWorld("auth", {
         ipcRenderer.invoke("auth:refresh-session"),
 
     logout: (): Promise<boolean> => ipcRenderer.invoke("auth:logout"),
+});
+
+
+contextBridge.exposeInMainWorld("parse", {
+    getHtmlByUrlForParse: (siteUrl: string) => electron.ipcRenderer.invoke("parse:get-html-by-url", siteUrl),
 });

@@ -5,14 +5,13 @@ import {
     useEffect,
     useMemo,
     useReducer,
-    useRef,
     type PropsWithChildren,
 } from "react";
 import type { UserDto } from "@site-parser/shared";
 import { authApi } from "../api/auth.api";
 import { authReducer, initialAuthState } from "./auth.reducer";
 import type { LoginPayload, RegisterPayload } from "./auth.types";
-import {AUTH_ACTIONS} from "./auth.constants.ts";
+import { AUTH_ACTIONS } from "./auth.constants.ts";
 
 type AuthContextValue = {
     user: UserDto | null;

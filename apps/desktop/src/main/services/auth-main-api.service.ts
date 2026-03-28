@@ -12,8 +12,6 @@ async function mainApiFetch<T>(
 ): Promise<T> {
     const headers = new Headers(options.headers);
 
-    console.log(API_URL)
-
     if (!(options.body instanceof FormData)) {
         headers.set("Content-Type", "application/json");
     }
