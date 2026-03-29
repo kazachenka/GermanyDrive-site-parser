@@ -1,20 +1,20 @@
-import { getDb } from '../db'
-import { createAccessToken } from '../lib/jwt'
+import {getDb} from '../db'
+import {createAccessToken} from '../lib/jwt'
 import {
 	createRefreshToken,
 	hashPassword,
 	sha256,
 	verifyPassword,
 } from '../lib/crypto'
-import type { Bindings } from '../types/app'
+import type {Bindings} from '../types/app'
 import type {
 	LoginRequestDto,
 	LogoutRequestDto,
 	RefreshRequestDto,
 	RegisterRequestDto,
 } from '@site-parser/shared'
-import { createUser } from "../repositories/user.resitory";
-import { createSession, findActiveSession, revokeByToken, revokeSession } from "../repositories/session.repository";
+import {createUser} from "../repositories/user.resitory";
+import {createSession, findActiveSession, revokeByToken, revokeSession} from "../repositories/session.repository";
 import {findUserByEmail, findUserById} from "../utils/auth.service.utils";
 
 function getNowIso() {
@@ -30,22 +30,22 @@ export async function registerUser(
 	payload: RegisterRequestDto
 ) {
 	const db = getDb(env)
-	const { email, password } = payload
+	const {email, password} = payload
 
 	if (!email || !password) {
-		return { error: { message: 'email and password required', status: 400 } }
+		return {error: {message: 'email and password required', status: 400}}
 	}
 
 	if (password.length < 8) {
-		return { error: { message: 'password must be >= 8 chars', status: 400 } }
+		return {error: {message: 'password must be >= 8 chars', status: 400}}
 	}
 
 	const existing = await findUserByEmail(db, email)
 	if (existing) {
-		return { error: { message: 'user already exists', status: 409 } }
+		return {error: {message: 'user already exists', status: 409}}
 	}
 
-	const { salt, hash } = await hashPassword(password)
+	const {salt, hash} = await hashPassword(password)
 	const now = getNowIso()
 
 	const user = await createUser(db, {
@@ -83,24 +83,24 @@ export async function loginUser(
 	payload: LoginRequestDto
 ) {
 	const db = getDb(env)
-	const { email, password } = payload
+	const {email, password} = payload
 
 	if (!email || !password) {
-		return { error: { message: 'invalid credentials', status: 401 } }
+		return {error: {message: 'invalid credentials', status: 401}}
 	}
 
 	const user = await findUserByEmail(db, email)
 	if (!user) {
-		return { error: { message: 'invalid credentials', status: 401 } }
+		return {error: {message: 'invalid credentials', status: 401}}
 	}
 
 	const valid = await verifyPassword(password, user.passwordSalt, user.passwordHash)
 	if (!valid) {
-		return { error: { message: 'invalid credentials', status: 401 } }
+		return {error: {message: 'invalid credentials', status: 401}}
 	}
 
 	const accessToken = await createAccessToken(
-		{ id: user.id, email: user.email },
+		{id: user.id, email: user.email},
 		env.JWT_SECRET
 	)
 
@@ -136,7 +136,7 @@ export async function refreshSession(
 	const db = getDb(env)
 
 	if (!payload.refreshToken) {
-		return { error: { message: 'refresh token required', status: 400 } }
+		return {error: {message: 'refresh token required', status: 400}}
 	}
 
 	const refreshTokenHash = await sha256(payload.refreshToken)
@@ -144,12 +144,12 @@ export async function refreshSession(
 
 	const session = await findActiveSession(db, refreshTokenHash, now)
 	if (!session) {
-		return { error: { message: 'invalid refresh token', status: 401 } }
+		return {error: {message: 'invalid refresh token', status: 401}}
 	}
 
 	const user = await findUserById(db, session.userId)
 	if (!user) {
-		return { error: { message: 'user not found', status: 404 } }
+		return {error: {message: 'user not found', status: 404}}
 	}
 
 	await revokeSession(db, session.id, now)
@@ -166,7 +166,7 @@ export async function refreshSession(
 	})
 
 	const accessToken = await createAccessToken(
-		{ id: user.id, email: user.email },
+		{id: user.id, email: user.email},
 		env.JWT_SECRET
 	)
 
@@ -186,12 +186,12 @@ export async function logoutUser(
 	const db = getDb(env)
 
 	if (!payload.refreshToken) {
-		return { data: { ok: true as const } }
+		return {data: {ok: true as const}}
 	}
 
 	const refreshTokenHash = await sha256(payload.refreshToken)
 
 	await revokeByToken(db, refreshTokenHash, getNowIso())
 
-	return { data: { ok: true as const } }
+	return {data: {ok: true as const}}
 }

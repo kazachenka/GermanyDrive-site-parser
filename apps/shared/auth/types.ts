@@ -1,5 +1,5 @@
 export type AccessTokenPayload = {
-    sub: string
-    email: string
-    exp: number
+  sub: string
+  email: string
+  exp: number
 }

@@ -1,4 +1,4 @@
-import { sign, verify } from 'hono/jwt'
+import {sign, verify} from 'hono/jwt'
 
 export async function createAccessToken(
 	user: { id: number; email: string },

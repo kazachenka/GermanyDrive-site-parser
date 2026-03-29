@@ -1,7 +1,7 @@
 function toHex(buffer: ArrayBuffer): string {
 	return [...new Uint8Array(buffer)]
-		.map((b) => b.toString(16).padStart(2, '0'))
-		.join('')
+	.map((b) => b.toString(16).padStart(2, '0'))
+	.join('')
 }
 
 function fromHex(hex: string): Uint8Array {
@@ -50,7 +50,7 @@ async function pbkdf2(password: string, saltHex: string): Promise<string> {
 export async function hashPassword(password: string) {
 	const salt = randomHex(16)
 	const hash = await pbkdf2(password, salt)
-	return { salt, hash }
+	return {salt, hash}
 }
 
 export async function verifyPassword(password: string, salt: string, hash: string) {

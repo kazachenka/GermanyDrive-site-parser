@@ -1,13 +1,13 @@
-import { eq } from 'drizzle-orm'
-import { users } from '../db/schema'
+import {eq} from 'drizzle-orm'
+import {users} from '../db/schema'
 
 
 export async function findUserByEmail(db: any, email: string) {
 	const result = await db
-		.select()
-		.from(users)
-		.where(eq(users.email, email))
-		.limit(1)
+	.select()
+	.from(users)
+	.where(eq(users.email, email))
+	.limit(1)
 
 	return result[0] ?? null
 }
@@ -20,19 +20,19 @@ export async function createUser(db: any, data: {
 	updatedAt: string
 }) {
 	const result = await db
-		.insert(users)
-		.values(data)
-		.returning({ id: users.id, email: users.email })
+	.insert(users)
+	.values(data)
+	.returning({id: users.id, email: users.email})
 
 	return result[0]
 }
 
 export async function findUserById(db: any, id: number) {
 	const result = await db
-		.select()
-		.from(users)
-		.where(eq(users.id, id))
-		.limit(1)
+	.select()
+	.from(users)
+	.where(eq(users.id, id))
+	.limit(1)
 
 	return result[0] ?? null
 }

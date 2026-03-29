@@ -1,7 +1,7 @@
-import { Hono } from 'hono'
-import { verifyAccessToken } from '../lib/jwt'
-import { jsonError } from '../lib/response'
-import type { Bindings } from '../types/app'
+import {Hono} from 'hono'
+import {verifyAccessToken} from '../lib/jwt'
+import {jsonError} from '../lib/response'
+import type {Bindings} from '../types/app'
 import type {
 	LoginRequestDto,
 	LogoutRequestDto,
