@@ -1,5 +1,5 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {MobileDeRuPostItemType} from "../../features/parser/model/parser.types.ts";
+import { MobileDeRuPostItemType } from "@site-parser/shared";
 import styles from "./PostLayout.module.css";
 
 type Props = {
@@ -16,7 +16,7 @@ export const PostLayout: React.FC<Props> = ({item, onSelectedImagesChange}) => {
 
   useEffect(() => {
     onSelectedImagesChange?.(selectedImages);
-  }, [selectedImages, onSelectedImagesChange]);
+  }, [selectedImages]);
 
   const specs = [
     {label: "Пробег", value: item.distance},
@@ -79,7 +79,6 @@ export const PostLayout: React.FC<Props> = ({item, onSelectedImagesChange}) => {
                     <button
                       type="button"
                       className={styles.thumbButton}
-                      onClick={() => setMainImage(img)}
                     >
                       <img
                         src={img}

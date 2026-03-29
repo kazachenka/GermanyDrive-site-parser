@@ -1,5 +1,6 @@
-import {MobileDeRuPostItemType, SiteParserState} from "./parser.types";
-import {PARSER_ACTIONS} from "./parser.constants.ts";
+import { SiteParserState } from "./parser.types";
+import { PARSER_ACTIONS } from "./parser.constants.ts";
+import { MobileDeRuPostItemType } from "@site-parser/shared"
 
 type SiteParserAction =
   | { type: typeof PARSER_ACTIONS.PARSE_START; payload: { url: string } }
@@ -12,7 +13,8 @@ type SiteParserAction =
 }
   | { type: typeof PARSER_ACTIONS.PARSE_ERROR; payload: { error: string } }
   | { type: typeof PARSER_ACTIONS.SET_PARSED_DATA; payload: { parsedData: MobileDeRuPostItemType | null } }
-  | { type: typeof PARSER_ACTIONS.RESET };
+  | { type: typeof PARSER_ACTIONS.RESET }
+  | { type: typeof PARSER_ACTIONS.SET_SELECTED_IMAGE_URLS, payload: { selectedImageUrls: string[] } };
 
 export function siteParserReducer(
   state: SiteParserState,
@@ -49,6 +51,12 @@ export function siteParserReducer(
         parsedData: action.payload.parsedData,
       };
 
+    case PARSER_ACTIONS.SET_SELECTED_IMAGE_URLS:
+      return {
+        ...state,
+        selectedImageUrls: action.payload.selectedImageUrls,
+      }
+
     case PARSER_ACTIONS.RESET:
       return {
         status: "idle",
@@ -56,6 +64,7 @@ export function siteParserReducer(
         html: null,
         parsedData: null,
         error: null,
+        selectedImageUrls: [],
       };
 
     default:

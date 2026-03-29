@@ -13,10 +13,10 @@ import {validateUrl} from "../lib/validate-url";
 import {INITIAL_SITE_PARSER_STATE, PARSER_ACTIONS} from "./parser.constants";
 import {siteParserReducer} from "./parser.reducer";
 import type {
-  MobileDeRuPostItemType,
   ParseSitePayload,
   SiteParserContextValue,
 } from "./parser.types";
+import { MobileDeRuPostItemType } from "@site-parser/shared"
 
 const SiteParserContext = createContext<SiteParserContextValue | undefined>(
   undefined,
@@ -26,9 +26,7 @@ interface SiteParserProviderProps {
   children: ReactNode;
 }
 
-export function SiteParserProvider({
-                                     children,
-                                   }: SiteParserProviderProps): JSX.Element {
+export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.Element {
   const [state, dispatch] = useReducer(
     siteParserReducer,
     INITIAL_SITE_PARSER_STATE,
@@ -114,14 +112,46 @@ export function SiteParserProvider({
     });
   }, []);
 
+  const setSelectedImages = useCallback((data: string[]) => {
+    dispatch({
+      type: PARSER_ACTIONS.SET_SELECTED_IMAGE_URLS,
+      payload: { selectedImageUrls: data },
+    });
+  }, [])
+
+  const sentToTelegramInTest = async () => {
+    if (state.parsedData) {
+      const dataForSent: MobileDeRuPostItemType = {
+        ...state.parsedData,
+        imageUrls: state.selectedImageUrls,
+      };
+
+      await parserApi.sentDataToTelegramTest(dataForSent);
+    }
+  }
+
+  const sentToTelegramInProd = async () => {
+    if (state.parsedData) {
+      const dataForSent: MobileDeRuPostItemType = {
+        ...state.parsedData,
+        imageUrls: state.selectedImageUrls,
+      };
+
+      await parserApi.sentDataToTelegramProd(dataForSent);
+    }
+  }
+
   const value = useMemo(
     () => ({
       state,
       parseSite,
       reset,
       setParsedData,
+      setSelectedImages,
+      sentToTelegramInTest,
+      sentToTelegramInProd
     }),
-    [state, parseSite, reset, setParsedData],
+    [state, parseSite, reset, setParsedData, setSelectedImages, sentToTelegramInProd, sentToTelegramInTest],
   );
 
   return (

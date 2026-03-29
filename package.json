@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "pnpm -r --parallel --filter ./apps/server --filter ./apps/desktop dev"
+    "dev": "pnpm -r --parallel --filter ./apps/server --filter ./apps/desktop run dev",
+    "prod": "pnpm -r --parallel --filter ./apps/server --filter ./apps/desktop run dev:prod",
+    "prod:localdb": "pnpm -r --parallel --filter ./apps/server --filter ./apps/desktop run dev:prod:localdb"
   },
   "keywords": [],
   "author": "",

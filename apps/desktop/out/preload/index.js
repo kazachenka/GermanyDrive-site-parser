@@ -9,5 +9,7 @@ electron.contextBridge.exposeInMainWorld("auth", {
   logout: () => electron.ipcRenderer.invoke("auth:logout")
 });
 electron.contextBridge.exposeInMainWorld("parse", {
-  getHtmlByUrlForParse: (siteUrl) => electron.ipcRenderer.invoke("parse:get-html-by-url", siteUrl)
+  getHtmlByUrlForParse: (siteUrl) => electron.ipcRenderer.invoke("parse:get-html-by-url", siteUrl),
+  sentToTelegramTest: (data) => electron.ipcRenderer.invoke("parse:sent-to-telegram-test-mode", data),
+  sentToTelegramProd: (data) => electron.ipcRenderer.invoke("parse:sent-to-telegram-prod-mode", data)
 });

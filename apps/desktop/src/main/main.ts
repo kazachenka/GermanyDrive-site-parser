@@ -14,8 +14,15 @@ function createWindow() {
     }
   })
 
+  if (!app.isPackaged) {
+    win.webContents.openDevTools()
+  }
+
+  // загрузка страницы
   if (process.env.ELECTRON_RENDERER_URL) {
     win.loadURL(process.env.ELECTRON_RENDERER_URL)
+  } else {
+    win.loadFile(join(__dirname, '../renderer/index.html'))
   }
 }
 

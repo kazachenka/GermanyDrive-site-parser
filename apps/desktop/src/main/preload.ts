@@ -1,4 +1,5 @@
 import electron, {contextBridge, ipcRenderer} from "electron";
+import { MobileDeRuPostItemType } from "@site-parser/shared";
 
 contextBridge.exposeInMainWorld("auth", {
   getAccessToken: (): Promise<string | null> =>
@@ -24,4 +25,6 @@ contextBridge.exposeInMainWorld("auth", {
 
 contextBridge.exposeInMainWorld("parse", {
   getHtmlByUrlForParse: (siteUrl: string) => electron.ipcRenderer.invoke("parse:get-html-by-url", siteUrl),
+  sentToTelegramTest: (data: MobileDeRuPostItemType) => electron.ipcRenderer.invoke("parse:sent-to-telegram-test-mode", data),
+  sentToTelegramProd: (data: MobileDeRuPostItemType) => electron.ipcRenderer.invoke("parse:sent-to-telegram-prod-mode", data),
 });

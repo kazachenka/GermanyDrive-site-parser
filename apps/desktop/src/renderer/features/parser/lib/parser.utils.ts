@@ -1,4 +1,4 @@
-import {MobileDeRuPostItemType} from "../model/parser.types.ts";
+import { MobileDeRuPostItemType } from "@site-parser/shared"
 
 export const isString = (elem: unknown): boolean => typeof elem === 'string';
 export const removeEmptySymbols = (str: string) => {

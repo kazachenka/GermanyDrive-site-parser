@@ -1,7 +1,6 @@
 import {useSiteParser} from "../../features/parser/model/parser.context.tsx";
-import {useEffect, useMemo, useRef, useState} from "react";
+import {useEffect, useMemo, useRef} from "react";
 import {getMobileDePageData} from "../../features/parser/lib/parser.utils.ts";
-import {MobileDeRuPostItemType} from "../../features/parser/model/parser.types.ts";
 import {AppButton} from "../../shared/ui/AppButton/AppButton.tsx";
 import {PostLayout} from "../../layouts/PostLayout/PostLayout.tsx";
 import {useNavigate} from "react-router-dom";
@@ -17,12 +16,20 @@ export function sanitizeHtml(html: string): string {
 }
 
 export function ProductPage() {
-  const {state, reset, setParsedData} = useSiteParser();
+  const { state, reset, setParsedData, setSelectedImages, sentToTelegramInTest, sentToTelegramInProd } = useSiteParser();
   const navigate = useNavigate();
   const hiddenRef = useRef<HTMLDivElement>(null);
 
-  const sentToTelegram = async () => {
+  const onSelectedImagesChange = (images: string[]) => {
+    setSelectedImages(images);
+  }
 
+  const sentToTelegramTestMode = async () => {
+    sentToTelegramInTest()
+  }
+
+  const sentToTelegramProdMode = async () => {
+    sentToTelegramInProd()
   }
 
   const clickBack = async () => {
@@ -64,10 +71,9 @@ export function ProductPage() {
       </div>
 
       {state.parsedData &&
-        <PostLayout item={state.parsedData}
-                    onSelectedImagesChange={(images) => {
-                      console.log("Выбранные картинки для постинга:", images);
-                    }}
+        <PostLayout
+          item={state.parsedData}
+          onSelectedImagesChange={onSelectedImagesChange}
         />}
 
       <div className={styles.buttonWrapper}>
@@ -76,8 +82,14 @@ export function ProductPage() {
         </AppButton>
 
         {state.parsedData &&
-          <AppButton onClick={sentToTelegram}>
-            Отправить сообщение
+          <AppButton onClick={sentToTelegramTestMode}>
+            Тестовая отправка
+          </AppButton>
+        }
+
+        {state.parsedData &&
+          <AppButton onClick={sentToTelegramProdMode}>
+            Отправка в группу
           </AppButton>
         }
       </div>
