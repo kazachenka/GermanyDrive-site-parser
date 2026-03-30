@@ -1,49 +1,63 @@
 type CleanupOptions = {
 	prefix: string
 	ttlMs: number
-	listLimit: number
-	maxDeletePerRun: number
+	listLimit?: number
+	deleteBatchSize?: number
+	nowMs?: number
+}
+
+type CleanupResult = {
+	scanned: number
+	deleted: number
 }
 
 export async function cleanupTempImages(
 	bucket: R2Bucket,
-	ctx: ExecutionContext,
 	options: CleanupOptions,
-) {
-	const now = Date.now()
+): Promise<CleanupResult> {
+	const now = options.nowMs ?? Date.now()
+	const listLimit = options.listLimit ?? 1000
+	const deleteBatchSize = options.deleteBatchSize ?? 50
+
 	let cursor: string | undefined = undefined
-	let deleted = 0
 	let scanned = 0
+	let deleted = 0
 
 	do {
 		const page = await bucket.list({
 			prefix: options.prefix,
 			cursor,
-			limit: options.listLimit,
+			limit: listLimit,
 		})
 
 		scanned += page.objects.length
 
+		let deleteBatch: Promise<void>[] = []
+
 		for (const obj of page.objects) {
 			const uploadedAt = new Date(obj.uploaded).getTime()
+			const isExpired = now - uploadedAt > options.ttlMs
 
-			if (now - uploadedAt > options.ttlMs) {
-				ctx.waitUntil(bucket.delete(obj.key))
-				deleted++
+			if (!isExpired) continue
 
-				if (deleted >= options.maxDeletePerRun) {
-					console.log('cleanup stopped early', {
-						scanned,
-						deleted,
-						nextCursor: page.cursor,
-					})
-					return
-				}
+			deleteBatch.push(bucket.delete(obj.key))
+			deleted++
+
+			if (deleteBatch.length >= deleteBatchSize) {
+				await Promise.all(deleteBatch)
+				deleteBatch = []
 			}
+		}
+
+		if (deleteBatch.length > 0) {
+			await Promise.all(deleteBatch)
 		}
 
 		cursor = page.truncated ? page.cursor : undefined
 	} while (cursor)
 
-	console.log('cleanup finished', { scanned, deleted })
+	const result: CleanupResult = { scanned, deleted }
+	console.log('cleanup finished', result)
+
+	return result
 }

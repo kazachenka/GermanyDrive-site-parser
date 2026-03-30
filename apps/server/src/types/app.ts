@@ -1,6 +1,6 @@
 export type Bindings = {
 	DB: D1Database
-	R2: R2Bucket
+	tg_temp_images: R2Bucket
 	IMAGES: ImagesBinding
 	JWT_SECRET: string
 	TELEGRAM_BOT_TOKEN: string

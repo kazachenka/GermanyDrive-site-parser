@@ -29,13 +29,13 @@ export default {
 		return app.fetch(request, env, ctx)
 	},
 
-	async scheduled(controller: ScheduledController, env: Bindings, ctx: ExecutionContext) {
-		if (controller.cron === '* * * * *') {
-			await cleanupTempImages(env.tg_temp_images, ctx, {
+	async scheduled(controller: ScheduledController, env: Bindings) {
+		if (controller.cron === '0 0 * * *') {
+				await cleanupTempImages(env.tg_temp_images, {
 				prefix: 'tg-temp/',
-				ttlMs: 60 * 60 * 1000,
+				ttlMs: 24 * 60 * 60 * 1000,
 				listLimit: 1000,
-				maxDeletePerRun: 300,
+				deleteBatchSize: 50,
 			})
 		}
 	},
