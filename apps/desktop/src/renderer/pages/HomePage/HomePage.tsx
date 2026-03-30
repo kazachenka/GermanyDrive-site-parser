@@ -2,8 +2,9 @@ import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../features/auth/model/auth.context";
 import {AppButton} from "../../shared/ui/AppButton/AppButton";
 import {AppInput} from "../../shared/ui/AppInput/AppInput.tsx";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {useSiteParser} from "../../features/parser/model/parser.context.tsx";
+import styles from "./HomePage.module.css";
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -14,9 +15,13 @@ export function HomePage() {
   const [price, setPrice] = useState("");
 
   const handleLogout = async () => {
-    await logout();
+    try {
+      await logout();
 
-    navigate("/login");
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const processUrl = async () => {
@@ -50,14 +55,15 @@ export function HomePage() {
         />
       </div>
 
+      <div className={styles.buttonWrapper}>
+        <AppButton onClick={processUrl} loading={isLoading}>
+          Обработать
+        </AppButton>
 
-      <AppButton onClick={processUrl} loading={isLoading}>
-        Обработать
-      </AppButton>
-
-      {/*<AppButton onClick={handleLogout} loading={isLoading}>*/}
-      {/*    Выйти*/}
-      {/*</AppButton>*/}
+        <AppButton onClick={handleLogout} loading={isLoading}>
+          Выйти
+        </AppButton>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import type { Bindings } from './types/app'
+import {AppContext, Bindings, UserContext} from './types/app'
 
 import telegramRoutes from './routes/telegram.routes'
 import authRoutes from './routes/auth.routes'
@@ -9,7 +9,7 @@ import { cleanupTempImages } from './jobs/cleanup-temp-images.job'
 import filesRoutes from "./routes/file.routes";
 import { createAuthMiddleware } from "../middleware/auth.middleware";
 
-const app = new Hono<{ Bindings: Bindings }>()
+const app = new Hono<AppContext>()
 
 app.use('*', corsMiddleware)
 

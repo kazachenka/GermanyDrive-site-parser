@@ -1,7 +1,7 @@
 import { Hono } from 'hono'
-import type { Bindings } from '../types/app'
+import {AppContext, Bindings} from '../types/app'
 
-const filesRoutes = new Hono<{ Bindings: Bindings }>()
+const filesRoutes = new Hono<AppContext>()
 
 filesRoutes.get('/:key{.+}', async (c) => {
 	const key = c.req.param('key')

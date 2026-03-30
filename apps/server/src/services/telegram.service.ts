@@ -209,14 +209,6 @@ export class PrintMobileDeRuService {
 
 		const blob = new Blob([jpegBytes], { type: 'image/jpeg' })
 
-		console.log('Converted image:', {
-			index,
-			url,
-			inputContentType,
-			outputContentType: transformedResponse.headers.get('content-type'),
-			size: blob.size,
-		})
-
 		return {
 			blob,
 			filename: `image-${index}.jpg`,

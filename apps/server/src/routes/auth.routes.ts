@@ -1,7 +1,7 @@
 import {Hono} from 'hono'
 import {verifyAccessToken} from '../lib/jwt'
 import {jsonError} from '../lib/response'
-import type {Bindings} from '../types/app'
+import { AppContext } from '../types/app'
 import type {
 	LoginRequestDto,
 	LogoutRequestDto,
@@ -15,50 +15,70 @@ import {
 	registerUser,
 } from '../services/auth.service'
 
-const auth = new Hono<{ Bindings: Bindings }>()
+const auth = new Hono<AppContext>()
 
 auth.post('/register', async (c) => {
-	const body = await c.req.json<RegisterRequestDto>()
-	const result = await registerUser(c.env, body)
+	try {
+		const body = await c.req.json<RegisterRequestDto>()
+		const result = await registerUser(c.env, body)
 
-	if ('error' in result) {
-		return jsonError(c, result.error.message, result.error.status)
+		if ('error' in result) {
+			return jsonError(c, result.error.message, result.error.status)
+		}
+
+		return c.json(result.data)
+	} catch (error) {
+		console.error("registration error:", error);
+		return jsonError(c, 'Something went wrong with registration')
 	}
-
-	return c.json(result.data)
 })
 
 auth.post('/login', async (c) => {
-	const body = await c.req.json<LoginRequestDto>()
-	const result = await loginUser(c.env, body)
+	try {
+		const body = await c.req.json<LoginRequestDto>()
+		const result = await loginUser(c.env, body)
 
-	if ('error' in result) {
-		return jsonError(c, result.error.message, result.error.status)
+		if ('error' in result) {
+			return jsonError(c, result.error.message, result.error.status)
+		}
+
+		return c.json(result.data)
+	} catch (error) {
+		console.error("login error:", error);
+		return jsonError(c, 'Something went wrong with login')
 	}
-
-	return c.json(result.data)
 })
 
 auth.post('/refresh', async (c) => {
-	const body = await c.req.json<RefreshRequestDto>()
-	const result = await refreshSession(c.env, body)
+	try {
+		const body = await c.req.json<RefreshRequestDto>()
+		const result = await refreshSession(c.env, body)
 
-	if ('error' in result) {
-		return jsonError(c, result.error.message, result.error.status)
+		if ('error' in result) {
+			return jsonError(c, result.error.message, result.error.status)
+		}
+
+		return c.json(result.data)
+	} catch (error) {
+		console.error("refresh token error:", error);
+		return jsonError(c, 'Something went wrong with refresh token')
 	}
-
-	return c.json(result.data)
 })
 
 auth.post('/logout', async (c) => {
-	const body = await c.req.json<LogoutRequestDto>()
-	const result = await logoutUser(c.env, body)
+	try {
+		const body = await c.req.json<LogoutRequestDto>()
+		const result = await logoutUser(c.env, body)
 
-	if ('error' in result) {
-		return jsonError(c, result.error.message, result.error.status)
+		if ('error' in result) {
+			return jsonError(c, result.error.message, result.error.status)
+		}
+
+		return c.json(result.data)
+	} catch (error) {
+		console.error("refresh token error:", error);
+		return jsonError(c, 'Something went wrong with logout')
 	}
-
-	return c.json(result.data)
 })
 
 auth.get('/me', async (c) => {

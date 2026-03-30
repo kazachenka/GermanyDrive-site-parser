@@ -5,8 +5,6 @@ export function createAuthMiddleware(): MiddlewareHandler {
 	return async (c, next) => {
 		const authHeader = c.req.header('Authorization')
 
-
-		console.log(c.req.header())
 		if (!authHeader || !authHeader.startsWith('Bearer ')) {
 			return c.json({ message: 'Unauthorized' }, 401)
 		}
