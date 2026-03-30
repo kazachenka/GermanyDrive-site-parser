@@ -8,12 +8,9 @@ const telegramRoutes = new Hono<{ Bindings: Bindings }>()
 telegramRoutes.post('/sent-to-test', async (c) => {
 	try {
 		const body = await c.req.json<MobileDeRuPostItemType>()
-		const baseUrl = new URL(c.req.url).origin
-		const printMobileDeRuService =  new PrintMobileDeRuService(
+		const printMobileDeRuService = new PrintMobileDeRuService(
 			c.env.TELEGRAM_BOT_TOKEN,
-			c.env.tg_temp_images,
 			c.env.IMAGES,
-			baseUrl,
 		)
 
 		await printMobileDeRuService.printItemToTgGroup(c.env.TELEGRAM_CHAT_ID, body)

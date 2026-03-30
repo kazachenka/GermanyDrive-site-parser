@@ -24,18 +24,12 @@ type PreparedTelegramPhoto = {
 export class PrintMobileDeRuService {
 	private readonly MAX_MEDIA_CAPTION_LENGTH = 1024
 	private readonly MAX_TELEGRAM_PHOTO_BYTES = 10 * 1024 * 1024
-	private readonly r2ImageService: R2ImageService
-	private readonly bucket: R2Bucket
 	private readonly images: ImagesBinding
 
 	constructor(
 		private readonly botToken: string,
-		bucket: R2Bucket,
 		images: ImagesBinding,
-		baseUrl: string,
 	) {
-		this.r2ImageService = new R2ImageService(bucket, baseUrl)
-		this.bucket = bucket
 		this.images = images
 	}
 
