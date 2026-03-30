@@ -7,6 +7,7 @@ import authRoutes from './routes/auth.routes'
 import { corsMiddleware } from '../middleware/cors'
 import { cleanupTempImages } from './jobs/cleanup-temp-images.job'
 import filesRoutes from "./routes/file.routes";
+import { createAuthMiddleware } from "../middleware/auth.middleware";
 
 const app = new Hono<{ Bindings: Bindings }>()
 
@@ -14,6 +15,10 @@ app.use('*', corsMiddleware)
 
 app.get('/', (c) => c.text('ok'))
 app.get('/health', (c) => c.json({ ok: true }))
+
+
+app.use('/telegram/*', createAuthMiddleware())
+app.use('/files/*', createAuthMiddleware())
 
 app.route('/auth', authRoutes)
 app.route('/telegram', telegramRoutes)

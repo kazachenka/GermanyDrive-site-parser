@@ -2,47 +2,6 @@
 const electron = require("electron");
 const node_path = require("node:path");
 const keytar = require("keytar");
-const API_URL$1 = "http://localhost:8787";
-async function mainApiFetch$1(path, options = {}) {
-  const headers = new Headers(options.headers);
-  if (!(options.body instanceof FormData)) {
-    headers.set("Content-Type", "application/json");
-  }
-  const response = await fetch(`${API_URL$1}${path}`, {
-    ...options,
-    headers
-  });
-  if (!response.ok) {
-    let message = "Request failed";
-    try {
-      const data = await response.json();
-      message = data.message ?? data.error ?? message;
-    } catch {
-      try {
-        message = await response.text();
-      } catch {
-        message = "Request failed";
-      }
-    }
-    throw new Error(message || "Request failed");
-  }
-  if (response.status === 204) {
-    return void 0;
-  }
-  return response.json();
-}
-async function refreshSessionRequest(payload) {
-  return mainApiFetch$1("/auth/refresh", {
-    method: "POST",
-    body: JSON.stringify(payload)
-  });
-}
-async function logoutSessionRequest(payload) {
-  await mainApiFetch$1("/auth/logout", {
-    method: "POST",
-    body: JSON.stringify(payload)
-  });
-}
 const SERVICE_NAME = "site-parser-desktop";
 const ACCOUNT_NAME = "refresh-token";
 const secureStorageService = {
@@ -83,6 +42,51 @@ const sessionService = {
     await secureStorageService.clearRefreshToken();
   }
 };
+const API_URL = "http://localhost:8787";
+async function mainApiFetch(path, options = {}) {
+  const headers = new Headers(options.headers);
+  const token = sessionService.getAccessToken();
+  if (!(options.body instanceof FormData)) {
+    headers.set("Content-Type", "application/json");
+  }
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+  const response = await fetch(`${API_URL}${path}`, {
+    ...options,
+    headers
+  });
+  if (!response.ok) {
+    let message = "Request failed";
+    try {
+      const data = await response.json();
+      message = data.message ?? data.error ?? message;
+    } catch {
+      try {
+        message = await response.text();
+      } catch {
+        message = "Request failed";
+      }
+    }
+    throw new Error(message || "Request failed");
+  }
+  if (response.status === 204) {
+    return void 0;
+  }
+  return response.json();
+}
+async function refreshSessionRequest(payload) {
+  return mainApiFetch("/auth/refresh", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+async function logoutSessionRequest(payload) {
+  await mainApiFetch("/auth/logout", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
 function registerAuthIpcHandlers() {
   electron.ipcMain.handle("auth:get-access-token", async () => {
     return sessionService.getAccessToken();
@@ -130,35 +134,6 @@ function registerAuthIpcHandlers() {
     return true;
   });
 }
-const API_URL = "http://localhost:8787";
-async function mainApiFetch(path, options = {}) {
-  const headers = new Headers(options.headers);
-  if (!(options.body instanceof FormData)) {
-    headers.set("Content-Type", "application/json");
-  }
-  const response = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers
-  });
-  if (!response.ok) {
-    let message = "Request failed";
-    try {
-      const data = await response.json();
-      message = data.message ?? data.error ?? message;
-    } catch {
-      try {
-        message = await response.text();
-      } catch {
-        message = "Request failed";
-      }
-    }
-    throw new Error(message || "Request failed");
-  }
-  if (response.status === 204) {
-    return void 0;
-  }
-  return response.json();
-}
 async function getHtmlByUrl(payload) {
   const res = await fetch(payload, {
     headers: {
@@ -200,9 +175,6 @@ function createWindow() {
       nodeIntegration: false
     }
   });
-  if (!electron.app.isPackaged) {
-    win.webContents.openDevTools();
-  }
   if (process.env.ELECTRON_RENDERER_URL) {
     win.loadURL(process.env.ELECTRON_RENDERER_URL);
   } else {
