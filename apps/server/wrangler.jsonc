@@ -12,6 +12,10 @@
 	},
 	"upload_source_maps": true,
 	"compatibility_flags": ["nodejs_compat"],
+	"vars": {
+		"TELEGRAM_BOT_TOKEN": "8677115398:AAG2yemy867ts6uRoxW11A0psl50x8qhjqg",
+		"TELEGRAM_CHAT_ID": "985248410"
+	},
 
 	"d1_databases": [
 		{
@@ -30,6 +34,10 @@
 			"remote": true
 		}
 	],
+
+	"images": {
+		"binding": "IMAGES"
+	},
 
 	"triggers": {
 		"crons": ["* * * * *"]

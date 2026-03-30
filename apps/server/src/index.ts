@@ -26,7 +26,7 @@ export default {
 
 	async scheduled(controller: ScheduledController, env: Bindings, ctx: ExecutionContext) {
 		if (controller.cron === '* * * * *') {
-			await cleanupTempImages(env.R2, ctx, {
+			await cleanupTempImages(env.tg_temp_images, ctx, {
 				prefix: 'tg-temp/',
 				ttlMs: 60 * 60 * 1000,
 				listLimit: 1000,

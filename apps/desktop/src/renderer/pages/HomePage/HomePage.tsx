@@ -7,17 +7,11 @@ import {useSiteParser} from "../../features/parser/model/parser.context.tsx";
 
 export function HomePage() {
   const navigate = useNavigate();
-  const {state, parseSite} = useSiteParser();
-  const {logout, isLoading} = useAuth();
+  const { parseSite, setProductPrice } = useSiteParser();
+  const { logout, isLoading } = useAuth();
 
   const [siteUrl, setSiteUrl] = useState("");
   const [price, setPrice] = useState("");
-
-  useEffect(() => {
-    if (state.html) {
-      console.log("HTML updated:", state.html);
-    }
-  }, [state.html]);
 
   const handleLogout = async () => {
     await logout();
@@ -26,9 +20,15 @@ export function HomePage() {
   };
 
   const processUrl = async () => {
-    await parseSite({url: siteUrl});
+    try {
+      await parseSite({url: siteUrl});
 
-    navigate("/product")
+      setProductPrice(price);
+
+      navigate("/product")
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -44,7 +44,7 @@ export function HomePage() {
 
         <AppInput
           label="Price"
-          type="text"
+          type="number"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
         />

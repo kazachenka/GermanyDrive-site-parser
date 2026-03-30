@@ -5,7 +5,7 @@ const filesRoutes = new Hono<{ Bindings: Bindings }>()
 
 filesRoutes.get('/:key{.+}', async (c) => {
 	const key = c.req.param('key')
-	const obj = await c.env.R2.get(key)
+	const obj = await c.env.tg_temp_images.get(key)
 
 	if (!obj) {
 		return c.text('Not found', 404)

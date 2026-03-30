@@ -46,7 +46,7 @@ export const PostLayout: React.FC<Props> = ({item, onSelectedImagesChange}) => {
             {!!item.price && (
               <div className={styles.priceInline}>
                 <span className={styles.priceInlineLabel}>Цена</span>
-                <span className={styles.priceInlineValue}>{item.price}</span>
+                <span className={styles.priceInlineValue}>{item.price}€</span>
               </div>
             )}
           </div>
@@ -75,7 +75,10 @@ export const PostLayout: React.FC<Props> = ({item, onSelectedImagesChange}) => {
                 const isSelected = selectedImages.includes(img);
 
                 return (
-                  <div key={`${img}-${i}`} className={styles.thumbCard}>
+                  <label key={`${img}-${i}`}
+                         className={styles.thumbCard}
+                         onClick={() => toggleImageSelection(img)}
+                  >
                     <button
                       type="button"
                       className={styles.thumbButton}
@@ -87,16 +90,15 @@ export const PostLayout: React.FC<Props> = ({item, onSelectedImagesChange}) => {
                       />
                     </button>
 
-                    <label className={styles.checkboxLabel}>
+                    <div className={styles.checkboxLabel}>
                       <input
                         type="checkbox"
                         checked={isSelected}
-                        onChange={() => toggleImageSelection(img)}
                         className={styles.checkbox}
                       />
                       <span className={styles.checkboxText}>Сохранить</span>
-                    </label>
-                  </div>
+                    </div>
+                  </label>
                 );
               })}
             </div>

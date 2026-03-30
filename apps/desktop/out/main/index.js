@@ -2,7 +2,7 @@
 const electron = require("electron");
 const node_path = require("node:path");
 const keytar = require("keytar");
-const API_URL$1 = "https://site-parser-api.kazachenkovova2001.workers.dev/";
+const API_URL$1 = "http://localhost:8787";
 async function mainApiFetch$1(path, options = {}) {
   const headers = new Headers(options.headers);
   if (!(options.body instanceof FormData)) {
@@ -130,7 +130,7 @@ function registerAuthIpcHandlers() {
     return true;
   });
 }
-const API_URL = "https://site-parser-api.kazachenkovova2001.workers.dev/";
+const API_URL = "http://localhost:8787";
 async function mainApiFetch(path, options = {}) {
   const headers = new Headers(options.headers);
   if (!(options.body instanceof FormData)) {

@@ -86,10 +86,11 @@ export async function loginUser(
 	const {email, password} = payload
 
 	if (!email || !password) {
-		return {error: {message: 'invalid credentials', status: 401}}
+		return {error: {message: 'email and password required', status: 401}}
 	}
 
 	const user = await findUserByEmail(db, email)
+
 	if (!user) {
 		return {error: {message: 'invalid credentials', status: 401}}
 	}

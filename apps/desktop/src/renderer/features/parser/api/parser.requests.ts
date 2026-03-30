@@ -5,9 +5,9 @@ export async function getHtmlByUrlRequest(url: string): Promise<string> {
 }
 
 export async function sentDataToTelegramTest(data: MobileDeRuPostItemType): Promise<void> {
-  return window.parse.sentToTelegramTest( data);
+  return window.parse.sentToTelegramTest(data);
 }
 
 export async function sentDataToTelegramProd(data: MobileDeRuPostItemType): Promise<void> {
-  return window.parse.sentToTelegramProd( data);
+  return window.parse.sentToTelegramProd(data);
 }

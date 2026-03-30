@@ -8410,7 +8410,7 @@ function useLinkClickHandler(to, _temp) {
     }
   }, [location, navigate, path, replaceProp, state, target, to, preventScrollReset, relative, viewTransition]);
 }
-const API_URL = "https://site-parser-api.kazachenkovova2001.workers.dev/";
+const API_URL = "https://site-parser-api.kazachenkovova2001.workers.dev";
 async function apiFetch(path, options = {}, withAuth = true) {
   const headers = new Headers(options.headers);
   if (!(options.body instanceof FormData)) {

@@ -1,4 +1,4 @@
-import type {SiteParserState} from "./parser.types";
+import type { SiteParserState } from "./parser.types";
 
 export const INITIAL_SITE_PARSER_STATE: SiteParserState = {
   status: "idle",
@@ -7,6 +7,7 @@ export const INITIAL_SITE_PARSER_STATE: SiteParserState = {
   parsedData: null,
   error: null,
   selectedImageUrls: [],
+  price: ''
 };
 
 export const PARSER_ACTIONS = {
@@ -16,6 +17,7 @@ export const PARSER_ACTIONS = {
 
   SET_SELECTED_IMAGE_URLS: "SET_SELECTED_IMAGE_URLS",
   SET_PARSED_DATA: "SET_PARSED_DATA",
+  SET_PRICE: "SET_PRICE",
   RESET: "RESET",
 
   SENT_TELEGRAM_TEST: "SENT_TELEGRAM_TEST",

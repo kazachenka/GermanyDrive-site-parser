@@ -119,11 +119,19 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
     });
   }, [])
 
+  const setProductPrice = useCallback((price: string) => {
+    dispatch({
+      type: PARSER_ACTIONS.SET_PRICE,
+      payload: { price: price },
+    });
+  }, [])
+
   const sentToTelegramInTest = async () => {
     if (state.parsedData) {
       const dataForSent: MobileDeRuPostItemType = {
         ...state.parsedData,
         imageUrls: state.selectedImageUrls,
+        price: state.price,
       };
 
       await parserApi.sentDataToTelegramTest(dataForSent);
@@ -135,6 +143,7 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
       const dataForSent: MobileDeRuPostItemType = {
         ...state.parsedData,
         imageUrls: state.selectedImageUrls,
+        price: state.price,
       };
 
       await parserApi.sentDataToTelegramProd(dataForSent);
@@ -148,10 +157,11 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
       reset,
       setParsedData,
       setSelectedImages,
+      setProductPrice,
       sentToTelegramInTest,
       sentToTelegramInProd
     }),
-    [state, parseSite, reset, setParsedData, setSelectedImages, sentToTelegramInProd, sentToTelegramInTest],
+    [state, setProductPrice, parseSite, reset, setParsedData, setSelectedImages, sentToTelegramInProd, sentToTelegramInTest],
   );
 
   return (

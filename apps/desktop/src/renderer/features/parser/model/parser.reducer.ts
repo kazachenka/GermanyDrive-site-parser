@@ -14,7 +14,8 @@ type SiteParserAction =
   | { type: typeof PARSER_ACTIONS.PARSE_ERROR; payload: { error: string } }
   | { type: typeof PARSER_ACTIONS.SET_PARSED_DATA; payload: { parsedData: MobileDeRuPostItemType | null } }
   | { type: typeof PARSER_ACTIONS.RESET }
-  | { type: typeof PARSER_ACTIONS.SET_SELECTED_IMAGE_URLS, payload: { selectedImageUrls: string[] } };
+  | { type: typeof PARSER_ACTIONS.SET_SELECTED_IMAGE_URLS, payload: { selectedImageUrls: string[] } }
+  | { type: typeof PARSER_ACTIONS.SET_PRICE, payload: { price: string } };
 
 export function siteParserReducer(
   state: SiteParserState,
@@ -46,6 +47,16 @@ export function siteParserReducer(
       };
 
     case PARSER_ACTIONS.SET_PARSED_DATA:
+      if (action.payload.parsedData) {
+        return {
+          ...state,
+          parsedData: {
+            ...action.payload.parsedData,
+            price: state.price ?? action.payload.parsedData.price,
+          },
+        };
+      }
+
       return {
         ...state,
         parsedData: action.payload.parsedData,
@@ -57,6 +68,16 @@ export function siteParserReducer(
         selectedImageUrls: action.payload.selectedImageUrls,
       }
 
+    case PARSER_ACTIONS.SET_PRICE:
+      return {
+        ...state,
+        parsedData: state.parsedData && {
+          ...state.parsedData,
+          price: action.payload.price,
+        },
+        price: action.payload.price,
+      }
+
     case PARSER_ACTIONS.RESET:
       return {
         status: "idle",
@@ -64,6 +85,7 @@ export function siteParserReducer(
         html: null,
         parsedData: null,
         error: null,
+        price: '',
         selectedImageUrls: [],
       };
 

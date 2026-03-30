@@ -15,6 +15,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  margin-top: 20px;
 }
 
 .content {
@@ -26,6 +27,11 @@
   min-height: 0;
   overflow: hidden;
   box-sizing: border-box;
+
+  overflow-y: auto;
+
+  scrollbar-width: thin;
+  scrollbar-color: rgba(122, 141, 196, 0.7) transparent;
 }
 
 .header {
@@ -128,14 +134,9 @@
   gap: 12px;
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
   padding-right: 6px;
   box-sizing: border-box;
   align-content: start;
-
-  scrollbar-width: thin;
-  scrollbar-color: rgba(122, 141, 196, 0.7) transparent;
 }
 
 .thumbs::-webkit-scrollbar {

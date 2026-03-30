@@ -7,6 +7,7 @@ export interface SiteParserState {
   html: string | null;
   parsedData: MobileDeRuPostItemType | null;
   selectedImageUrls: string[];
+  price: string;
   error: string | null;
 }
 
@@ -18,6 +19,7 @@ export interface ParseSitePayload {
 export interface SiteParserContextValue {
   state: SiteParserState;
   parseSite: (payload: ParseSitePayload) => Promise<void>;
+  setProductPrice: (price: string) => void;
   reset: () => void;
   setParsedData: (data: MobileDeRuPostItemType | null) => void;
   setSelectedImages: (data: string[]) => void;

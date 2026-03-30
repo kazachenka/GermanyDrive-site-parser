@@ -12,18 +12,9 @@ telegramRoutes.post('/sent-to-test', async (c) => {
 		const printMobileDeRuService =  new PrintMobileDeRuService(
 			c.env.TELEGRAM_BOT_TOKEN,
 			c.env.tg_temp_images,
+			c.env.IMAGES,
 			baseUrl,
 		)
-
-		// if (!body.message?.trim()) {
-		// 	return c.json({ok: false, message: 'message is required'}, 400)
-		// }
-		//
-		// await sendTelegramMessage({
-		// 	botToken: c.env.TELEGRAM_BOT_TOKEN,
-		// 	chatId: c.env.TELEGRAM_CHAT_ID,
-		// 	text: body.message,
-		// })
 
 		await printMobileDeRuService.printItemToTgGroup(c.env.TELEGRAM_CHAT_ID, body)
 
@@ -37,16 +28,6 @@ telegramRoutes.post('/sent-to-test', async (c) => {
 telegramRoutes.post('/sent-to-prod', async (c) => {
 	try {
 		const body = await c.req.json<{ data: MobileDeRuPostItemType }>()
-
-		// if (!body.message?.trim()) {
-		// 	return c.json({ok: false, message: 'message is required'}, 400)
-		// }
-		//
-		// await sendTelegramMessage({
-		// 	botToken: c.env.TELEGRAM_BOT_TOKEN,
-		// 	chatId: c.env.TELEGRAM_CHAT_ID,
-		// 	text: body.message,
-		// })
 
 		return c.json({ok: true})
 	} catch (error) {

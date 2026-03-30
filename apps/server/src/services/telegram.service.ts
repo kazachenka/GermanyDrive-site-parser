@@ -14,16 +14,29 @@ const STYLED_NUMBERS: Record<number, string> = {
 	9: '9️⃣',
 }
 
+type PreparedTelegramPhoto = {
+	blob: Blob
+	filename: string
+	sourceUrl: string
+	index: number
+}
+
 export class PrintMobileDeRuService {
 	private readonly MAX_MEDIA_CAPTION_LENGTH = 1024
+	private readonly MAX_TELEGRAM_PHOTO_BYTES = 10 * 1024 * 1024
 	private readonly r2ImageService: R2ImageService
+	private readonly bucket: R2Bucket
+	private readonly images: ImagesBinding
 
 	constructor(
 		private readonly botToken: string,
 		bucket: R2Bucket,
+		images: ImagesBinding,
 		baseUrl: string,
 	) {
 		this.r2ImageService = new R2ImageService(bucket, baseUrl)
+		this.bucket = bucket
+		this.images = images
 	}
 
 	private escapeHtml(text: string): string {
@@ -138,13 +151,15 @@ export class PrintMobileDeRuService {
 		)
 	}
 
-	private async telegramCall(method: string, body: Record<string, unknown>) {
+	private async telegramCall(
+		method: string,
+		body: BodyInit,
+		headers?: HeadersInit,
+	) {
 		const res = await fetch(`https://api.telegram.org/bot${this.botToken}/${method}`, {
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(body),
+			headers,
+			body,
 		})
 
 		const data = await res.json<any>()
@@ -156,50 +171,143 @@ export class PrintMobileDeRuService {
 		return data
 	}
 
+	private async fetchImageAsTelegramJpeg(
+		url: string,
+		index: number,
+	): Promise<PreparedTelegramPhoto> {
+		const res = await fetch(url)
+
+		if (!res.ok) {
+			throw new Error(`Failed to fetch image: ${res.status} ${res.statusText}`)
+		}
+
+		const inputContentType = (res.headers.get('content-type') ?? '').toLowerCase()
+		const inputBytes = await res.arrayBuffer()
+
+		if (!inputBytes.byteLength) {
+			throw new Error(`Image is empty: ${url}`)
+		}
+
+		const transformed = await this.images
+		.input(new Blob([inputBytes], { type: inputContentType || 'application/octet-stream' }).stream())
+		.output({
+			format: 'image/jpeg',
+			quality: 90,
+		})
+
+		const transformedResponse = transformed.response()
+
+		if (!transformedResponse.ok) {
+			throw new Error(`Images binding failed for index=${index}, url=${url}`)
+		}
+
+		const jpegBytes = await transformedResponse.arrayBuffer()
+
+		if (!jpegBytes.byteLength) {
+			throw new Error(`Converted JPEG is empty for index=${index}, url=${url}`)
+		}
+
+		if (jpegBytes.byteLength > this.MAX_TELEGRAM_PHOTO_BYTES) {
+			throw new Error(
+				`Converted JPEG is too large for Telegram: ${jpegBytes.byteLength} bytes, url=${url}`,
+			)
+		}
+
+		const blob = new Blob([jpegBytes], { type: 'image/jpeg' })
+
+		console.log('Converted image:', {
+			index,
+			url,
+			inputContentType,
+			outputContentType: transformedResponse.headers.get('content-type'),
+			size: blob.size,
+		})
+
+		return {
+			blob,
+			filename: `image-${index}.jpg`,
+			sourceUrl: url,
+			index,
+		}
+	}
+
+	private async prepareTelegramPhotos(urls: string[]): Promise<PreparedTelegramPhoto[]> {
+		const settled = await Promise.allSettled(
+			urls.map((url, index) => this.fetchImageAsTelegramJpeg(url, index)),
+		)
+
+		const validPhotos: PreparedTelegramPhoto[] = []
+
+		for (const result of settled) {
+			if (result.status === 'fulfilled') {
+				validPhotos.push(result.value)
+			} else {
+				console.error('Failed to prepare Telegram image:', result.reason)
+			}
+		}
+
+		return validPhotos
+	}
+
 	public async printItemToTgGroup(
 		chatId: number | string,
 		auto: MobileDeRuPostItemType,
 		text?: string,
 	): Promise<void> {
-		const selectedUrls = auto.imageUrls?.slice(0, 10) ?? []
+		try {
+			const selectedUrls = auto.imageUrls?.slice(0, 10) ?? []
 
-		if (!selectedUrls.length) {
-			throw new Error('Нет фотографий для отправки')
+			if (!selectedUrls.length) {
+				throw new Error('Нет фотографий для отправки')
+			}
+
+			const styledPrice = this.toStyledNumber(Number(auto.price))
+			const caption = this.buildCaption(auto, styledPrice, Number(auto.price), text)
+
+			const preparedPhotos = await this.prepareTelegramPhotos(selectedUrls)
+
+			if (!preparedPhotos.length) {
+				throw new Error('Не удалось подготовить изображения для Telegram')
+			}
+
+			const form = new FormData()
+			form.set('chat_id', String(chatId))
+
+			const media = preparedPhotos.map((photo, index) => ({
+				type: 'photo',
+				media: `attach://photo${index}`,
+				...(index === 0
+					? {
+						caption,
+						parse_mode: 'HTML',
+					}
+					: {}),
+			}))
+
+			form.set('media', JSON.stringify(media))
+
+			preparedPhotos.forEach((photo, index) => {
+				form.set(`photo${index}`, photo.blob, photo.filename)
+			})
+
+			await this.telegramCall('sendMediaGroup', form)
+		} catch (error) {
+			console.error(error)
 		}
-
-		const price = 11600
-		const styledPrice = this.toStyledNumber(price)
-		const caption = this.buildCaption(auto, styledPrice, price, text)
-
-		const uploadedImages = await Promise.all(
-			selectedUrls.map((url) => this.r2ImageService.uploadFromUrl(url))
-		)
-
-		console.log('uploadedImages: ', uploadedImages);
-
-		const media = uploadedImages.map((file, index) => ({
-			type: 'photo',
-			media: file.url,
-			...(index === 0
-				? {
-					caption,
-					parse_mode: 'HTML',
-				}
-				: {}),
-		}))
-
-		await this.telegramCall('sendMediaGroup', {
-			chat_id: String(chatId),
-			media,
-		})
 	}
 
 	public async sendTextMessage(chatId: number | string, text: string): Promise<void> {
-		await this.telegramCall('sendMessage', {
-			chat_id: String(chatId),
-			text,
-			parse_mode: 'HTML',
-			disable_web_page_preview: true,
-		})
+		await this.telegramCall(
+			'sendMessage',
+			JSON.stringify({
+				chat_id: String(chatId),
+				text,
+				parse_mode: 'HTML',
+				disable_web_page_preview: true,
+			}),
+			{
+				'Content-Type': 'application/json',
+			},
+		)
 	}
 }
