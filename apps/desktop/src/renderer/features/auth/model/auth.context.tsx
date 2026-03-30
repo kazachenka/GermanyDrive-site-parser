@@ -15,7 +15,7 @@
 
   type AuthContextValue = {
     user: UserDto | null;
-    isLoading: boolean;
+    isLoadingAuth: boolean;
     initialized: boolean;
     error: string | null;
     isAuthenticated: boolean;
@@ -142,7 +142,7 @@
     const value = useMemo<AuthContextValue>(
       () => ({
         user: state.user,
-        isLoading: state.isLoading,
+        isLoadingAuth: state.isLoading,
         initialized: state.initialized,
         error: state.error,
         isAuthenticated: Boolean(state.user),

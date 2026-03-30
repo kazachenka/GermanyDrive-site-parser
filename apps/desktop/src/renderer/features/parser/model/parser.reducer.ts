@@ -15,7 +15,11 @@ type SiteParserAction =
   | { type: typeof PARSER_ACTIONS.SET_PARSED_DATA; payload: { parsedData: MobileDeRuPostItemType | null } }
   | { type: typeof PARSER_ACTIONS.RESET }
   | { type: typeof PARSER_ACTIONS.SET_SELECTED_IMAGE_URLS, payload: { selectedImageUrls: string[] } }
-  | { type: typeof PARSER_ACTIONS.SET_PRICE, payload: { price: string } };
+  | { type: typeof PARSER_ACTIONS.SET_PRICE, payload: { price: string } }
+  | { type: typeof PARSER_ACTIONS.SENT_TELEGRAM_FINISHED }
+  | { type: typeof PARSER_ACTIONS.SENT_TELEGRAM_TEST }
+  | { type: typeof PARSER_ACTIONS.SENT_TELEGRAM_PROD };
+
 
 export function siteParserReducer(
   state: SiteParserState,
@@ -28,6 +32,7 @@ export function siteParserReducer(
         status: "loading",
         url: action.payload.url,
         error: null,
+        siteParserLoading: true,
       };
 
     case PARSER_ACTIONS.PARSE_SUCCESS:
@@ -37,6 +42,7 @@ export function siteParserReducer(
         url: action.payload.url,
         html: action.payload.html,
         error: null,
+        siteParserLoading: false,
       };
 
     case PARSER_ACTIONS.PARSE_ERROR:
@@ -44,6 +50,7 @@ export function siteParserReducer(
         ...state,
         status: "error",
         error: action.payload.error,
+        siteParserLoading: false,
       };
 
     case PARSER_ACTIONS.SET_PARSED_DATA:
@@ -60,6 +67,7 @@ export function siteParserReducer(
       return {
         ...state,
         parsedData: action.payload.parsedData,
+        siteParserLoading: false,
       };
 
     case PARSER_ACTIONS.SET_SELECTED_IMAGE_URLS:
@@ -78,6 +86,24 @@ export function siteParserReducer(
         price: action.payload.price,
       }
 
+    case PARSER_ACTIONS.SENT_TELEGRAM_FINISHED:
+      return {
+        ...state,
+        siteParserLoading: false,
+      };
+
+    case PARSER_ACTIONS.SENT_TELEGRAM_TEST:
+      return {
+        ...state,
+        siteParserLoading: true,
+      };
+
+    case PARSER_ACTIONS.SENT_TELEGRAM_PROD:
+      return {
+        ...state,
+        siteParserLoading: true,
+      };
+
     case PARSER_ACTIONS.RESET:
       return {
         status: "idle",
@@ -86,6 +112,7 @@ export function siteParserReducer(
         parsedData: null,
         error: null,
         price: '',
+        siteParserLoading: false,
         selectedImageUrls: [],
       };
 

@@ -7,6 +7,7 @@ export interface SiteParserState {
   html: string | null;
   parsedData: MobileDeRuPostItemType | null;
   selectedImageUrls: string[];
+  siteParserLoading: boolean;
   price: string;
   error: string | null;
 }
@@ -23,6 +24,7 @@ export interface SiteParserContextValue {
   reset: () => void;
   setParsedData: (data: MobileDeRuPostItemType | null) => void;
   setSelectedImages: (data: string[]) => void;
+  siteParserLoading: boolean;
   sentToTelegramInTest: () => void,
   sentToTelegramInProd: () => void,
 }

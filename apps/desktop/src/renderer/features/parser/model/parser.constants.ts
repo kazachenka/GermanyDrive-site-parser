@@ -6,6 +6,7 @@ export const INITIAL_SITE_PARSER_STATE: SiteParserState = {
   html: null,
   parsedData: null,
   error: null,
+  siteParserLoading: false,
   selectedImageUrls: [],
   price: ''
 };
@@ -22,4 +23,5 @@ export const PARSER_ACTIONS = {
 
   SENT_TELEGRAM_TEST: "SENT_TELEGRAM_TEST",
   SENT_TELEGRAM_PROD: "SENT_TELEGRAM_PROD",
+  SENT_TELEGRAM_FINISHED: "SENT_TELEGRAM_FINISHED"
 } as const;

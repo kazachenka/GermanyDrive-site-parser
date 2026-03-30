@@ -11,13 +11,13 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 }
 
 export function AppButton({
-                            children,
-                            variant = "primary",
-                            fullWidth,
-                            loading,
-                            disabled,
-                            ...props
-                          }: ButtonProps) {
+    children,
+    variant = "primary",
+    fullWidth,
+    loading,
+    disabled,
+      ...props
+    }: ButtonProps) {
   return (
     <button
       className={[

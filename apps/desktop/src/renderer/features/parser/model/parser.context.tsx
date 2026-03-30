@@ -6,6 +6,7 @@ import {
   useReducer,
   useRef,
   type ReactNode,
+  useState, useEffect,
 } from "react";
 import {parserApi} from "../api/parser.api";
 import {normalizeParserError} from "../lib/normalize-parser-error";
@@ -128,25 +129,50 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
 
   const sentToTelegramInTest = async () => {
     if (state.parsedData) {
-      const dataForSent: MobileDeRuPostItemType = {
-        ...state.parsedData,
-        imageUrls: state.selectedImageUrls,
-        price: state.price,
-      };
+      try {
+        dispatch({
+          type: PARSER_ACTIONS.SENT_TELEGRAM_TEST,
+        });
 
-      await parserApi.sentDataToTelegramTest(dataForSent);
+        const dataForSent: MobileDeRuPostItemType = {
+          ...state.parsedData,
+          imageUrls: state.selectedImageUrls,
+          price: state.price,
+        };
+
+        await parserApi.sentDataToTelegramTest(dataForSent);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        dispatch({
+          type: PARSER_ACTIONS.SENT_TELEGRAM_FINISHED,
+        });
+      }
     }
   }
 
   const sentToTelegramInProd = async () => {
     if (state.parsedData) {
-      const dataForSent: MobileDeRuPostItemType = {
-        ...state.parsedData,
-        imageUrls: state.selectedImageUrls,
-        price: state.price,
-      };
+      try {
+        dispatch({
+          type: PARSER_ACTIONS.SENT_TELEGRAM_PROD,
+        });
 
-      await parserApi.sentDataToTelegramProd(dataForSent);
+
+        const dataForSent: MobileDeRuPostItemType = {
+          ...state.parsedData,
+          imageUrls: state.selectedImageUrls,
+          price: state.price,
+        };
+
+        await parserApi.sentDataToTelegramProd(dataForSent);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        dispatch({
+          type: PARSER_ACTIONS.SENT_TELEGRAM_FINISHED,
+        });
+      }
     }
   }
 
@@ -158,6 +184,7 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
       setParsedData,
       setSelectedImages,
       setProductPrice,
+      siteParserLoading: state.siteParserLoading,
       sentToTelegramInTest,
       sentToTelegramInProd
     }),

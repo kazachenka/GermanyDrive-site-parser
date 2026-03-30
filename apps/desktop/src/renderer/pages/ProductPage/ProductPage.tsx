@@ -1,10 +1,11 @@
 import {useSiteParser} from "../../features/parser/model/parser.context.tsx";
-import {useEffect, useMemo, useRef} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import {getMobileDePageData} from "../../features/parser/lib/parser.utils.ts";
 import {AppButton} from "../../shared/ui/AppButton/AppButton.tsx";
 import {PostLayout} from "../../layouts/PostLayout/PostLayout.tsx";
 import {useNavigate} from "react-router-dom";
 import styles from "./ProductPage.module.css";
+import {AppLoader} from "../../shared/ui/AppLoader/AppLoader.tsx";
 
 export function sanitizeHtml(html: string): string {
   const parser = new DOMParser();
@@ -16,7 +17,7 @@ export function sanitizeHtml(html: string): string {
 }
 
 export function ProductPage() {
-  const { state, reset, setParsedData, setSelectedImages, sentToTelegramInTest, sentToTelegramInProd } = useSiteParser();
+  const { siteParserLoading, state, reset, setParsedData, setSelectedImages, sentToTelegramInTest, sentToTelegramInProd } = useSiteParser();
   const navigate = useNavigate();
   const hiddenRef = useRef<HTMLDivElement>(null);
 
@@ -51,6 +52,12 @@ export function ProductPage() {
     setParsedData(result);
 
   }, [sanitizedHtml]);
+
+  if (siteParserLoading){
+    return (
+      <AppLoader />
+    )
+  }
 
   return (
     <div className={styles.wrapper}>

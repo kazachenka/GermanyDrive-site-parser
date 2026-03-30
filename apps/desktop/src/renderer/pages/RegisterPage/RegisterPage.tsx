@@ -9,7 +9,7 @@ import styles from "./RegisterPage.module.css";
 
 export function RegisterPage() {
   const navigate = useNavigate();
-  const {register, isLoading, error, clearAuthError} = useAuth();
+  const {register, isLoadingAuth, error, clearAuthError} = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -59,8 +59,8 @@ export function RegisterPage() {
 
           {error && <p className={styles.error}>{error}</p>}
 
-          <AppButton fullWidth type="submit" loading={isLoading}>
-            {isLoading ? "Создаем..." : "Зарегистрироваться"}
+          <AppButton fullWidth type="submit" loading={isLoadingAuth}>
+            {isLoadingAuth ? "Создаем..." : "Зарегистрироваться"}
           </AppButton>
         </form>
 

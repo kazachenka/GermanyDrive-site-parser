@@ -75,7 +75,7 @@ export const PostLayout: React.FC<Props> = ({item, onSelectedImagesChange}) => {
                 const isSelected = selectedImages.includes(img);
 
                 return (
-                  <label key={`${img}-${i}`}
+                  <div key={`${img}-${i}`}
                          className={styles.thumbCard}
                          onClick={() => toggleImageSelection(img)}
                   >
@@ -95,10 +95,11 @@ export const PostLayout: React.FC<Props> = ({item, onSelectedImagesChange}) => {
                         type="checkbox"
                         checked={isSelected}
                         className={styles.checkbox}
+                        readOnly
                       />
                       <span className={styles.checkboxText}>Сохранить</span>
                     </div>
-                  </label>
+                  </div>
                 );
               })}
             </div>
