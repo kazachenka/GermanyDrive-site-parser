@@ -47,7 +47,7 @@ export function ProductPage() {
     if (!hiddenRef.current) return;
     if (!sanitizedHtml) return;
 
-    const result = getMobileDePageData('http://test.com');
+    const result = getMobileDePageData(String(state.url));
 
     setParsedData(result);
 

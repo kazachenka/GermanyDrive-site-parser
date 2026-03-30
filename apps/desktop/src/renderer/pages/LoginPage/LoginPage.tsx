@@ -9,7 +9,7 @@ import styles from "./LoginPage.module.css";
 
 export function LoginPage() {
   const navigate = useNavigate();
-  const {login, isLoading, error, clearAuthError} = useAuth();
+  const {login, isLoadingAuth, error, clearAuthError} = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -58,8 +58,8 @@ export function LoginPage() {
 
           {error && <p className={styles.error}>{error}</p>}
 
-          <AppButton fullWidth type="submit" loading={isLoading}>
-            {isLoading ? "Входим..." : "Войти"}
+          <AppButton fullWidth type="submit" loading={isLoadingAuth}>
+            {isLoadingAuth ? "Входим..." : "Войти"}
           </AppButton>
         </form>
 

@@ -18,6 +18,7 @@ import type {
   SiteParserContextValue,
 } from "./parser.types";
 import { MobileDeRuPostItemType } from "@site-parser/shared"
+import {useError} from "../../error/error.context.tsx";
 
 const SiteParserContext = createContext<SiteParserContextValue | undefined>(
   undefined,
@@ -32,6 +33,13 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
     siteParserReducer,
     INITIAL_SITE_PARSER_STATE,
   );
+  const { showError } = useError();
+
+  useEffect(() => {
+    if (state.error) {
+      showError(state.error);
+    }
+  }, [state.error]);
 
   const requestIdRef = useRef(0);
 
@@ -128,7 +136,7 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
   }, [])
 
   const sentToTelegramInTest = async () => {
-    if (state.parsedData) {
+    if (state.parsedData && state.selectedImageUrls.length) {
       try {
         dispatch({
           type: PARSER_ACTIONS.SENT_TELEGRAM_TEST,
@@ -148,16 +156,17 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
           type: PARSER_ACTIONS.SENT_TELEGRAM_FINISHED,
         });
       }
+    } else {
+      showError('Необходимо выбрать фото для отправки');
     }
   }
 
   const sentToTelegramInProd = async () => {
-    if (state.parsedData) {
+    if (state.parsedData && state.selectedImageUrls.length) {
       try {
         dispatch({
           type: PARSER_ACTIONS.SENT_TELEGRAM_PROD,
         });
-
 
         const dataForSent: MobileDeRuPostItemType = {
           ...state.parsedData,
@@ -173,6 +182,8 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
           type: PARSER_ACTIONS.SENT_TELEGRAM_FINISHED,
         });
       }
+    } else {
+      showError('Необходимо выбрать фото для отправки');
     }
   }
 

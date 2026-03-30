@@ -12,6 +12,7 @@
   import {authReducer, initialAuthState} from "./auth.reducer";
   import type {LoginPayload, RegisterPayload} from "./auth.types";
   import {AUTH_ACTIONS} from "./auth.constants.ts";
+  import {useError} from "../../error/error.context.tsx";
 
   type AuthContextValue = {
     user: UserDto | null;
@@ -30,6 +31,13 @@
 
   export function AuthProvider({children}: PropsWithChildren) {
     const [state, dispatch] = useReducer(authReducer, initialAuthState);
+    const { showError } = useError()
+
+    useEffect(() => {
+      if (state.error) {
+        showError(state.error);
+      }
+    }, [state.error]);
 
     const login = useCallback(async (payload: LoginPayload) => {
       dispatch({type: AUTH_ACTIONS.AUTH_REQUEST});

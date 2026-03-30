@@ -29,7 +29,7 @@ auth.post('/register', async (c) => {
 		return c.json(result.data)
 	} catch (error) {
 		console.error("registration error:", error);
-		return jsonError(c, 'Something went wrong with registration')
+		return jsonError(c, `${error}`)
 	}
 })
 
@@ -45,7 +45,7 @@ auth.post('/login', async (c) => {
 		return c.json(result.data)
 	} catch (error) {
 		console.error("login error:", error);
-		return jsonError(c, 'Something went wrong with login')
+		return jsonError(c, `${error}`)
 	}
 })
 
@@ -61,7 +61,7 @@ auth.post('/refresh', async (c) => {
 		return c.json(result.data)
 	} catch (error) {
 		console.error("refresh token error:", error);
-		return jsonError(c, 'Something went wrong with refresh token')
+		return jsonError(c, `${error}`)
 	}
 })
 
@@ -77,7 +77,7 @@ auth.post('/logout', async (c) => {
 		return c.json(result.data)
 	} catch (error) {
 		console.error("refresh token error:", error);
-		return jsonError(c, 'Something went wrong with logout')
+		return jsonError(c, 'Произашла ошибка с выходом из аккаунта')
 	}
 })
 
@@ -85,13 +85,13 @@ auth.get('/me', async (c) => {
 	const authHeader = c.req.header('Authorization')
 
 	if (!authHeader) {
-		return jsonError(c, 'Unauthorized', 401)
+		return jsonError(c, 'Вы неавторизованы', 401)
 	}
 
 	const [type, token] = authHeader.split(' ')
 
 	if (type !== 'Bearer' || !token) {
-		return jsonError(c, 'Unauthorized', 401)
+		return jsonError(c, 'Вы неавторизованы', 401)
 	}
 
 	try {
@@ -106,7 +106,7 @@ auth.get('/me', async (c) => {
 		})
 	} catch (error) {
 		console.error('AUTH ME ERROR:', error)
-		return jsonError(c, 'Unauthorized', 401)
+		return jsonError(c, 'Вы неавторизованы', 401)
 	}
 })
 

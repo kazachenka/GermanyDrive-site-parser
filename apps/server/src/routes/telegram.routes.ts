@@ -15,7 +15,7 @@ telegramRoutes.post('/sent-to-test', async (c) => {
 		const user = await findUserByEmail(db, userData.email);
 
 		if (!user) {
-			return c.json({ok: false, message: 'Unauthorized'}, 401);
+			return c.json({ok: false, message: 'Вы неавторизованы'}, 401);
 		}
 
 		const printMobileDeRuService = new PrintMobileDeRuService(
@@ -28,7 +28,7 @@ telegramRoutes.post('/sent-to-test', async (c) => {
 		return c.json({ok: true})
 	} catch (error) {
 		console.error('TELEGRAM SEND ERROR:', error)
-		return c.json({ok: false, message: 'failed to send message'}, 500);
+		return c.json({ok: false, message: `Ошибка отправки сообщения: ${error}`}, 500);
 	}
 })
 
@@ -45,7 +45,7 @@ telegramRoutes.post('/sent-to-prod', async (c) => {
 		return c.json({ok: true})
 	} catch (error) {
 		console.error('TELEGRAM SEND ERROR:', error)
-		return c.json({ok: false, message: 'failed to send message'}, 500)
+		return c.json({ok: false, message: `Ошибка отправки сообщения: ${error}`}, 500)
 	}
 })
 
