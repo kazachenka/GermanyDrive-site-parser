@@ -37,7 +37,7 @@ async function pbkdf2(password: string, saltHex: string): Promise<string> {
 		{
 			name: 'PBKDF2',
 			salt: fromHex(saltHex),
-			iterations: 310000,
+			iterations: 100000,
 			hash: 'SHA-256',
 		},
 		key,
