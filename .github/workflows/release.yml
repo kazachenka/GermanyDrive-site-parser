@@ -39,3 +39,4 @@ jobs:
         run: pnpm run dist:win:publish
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VITE_API_URL: https://site-parser-api.kazachenkovova2001.workers.dev
