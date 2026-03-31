@@ -68,13 +68,15 @@ export function HomePage() {
             label="Site Url"
             type="text"
             value={siteUrl}
+            placeholder="https://www.mobile.de/ru/"
             onChange={(e) => setSiteUrl(e.target.value)}
           />
 
           <AppInput
-            label="Price"
+            label="Цена €"
             type="number"
             value={price}
+            placeholder="7673"
             onChange={(e) => setPrice(e.target.value)}
           />
         </div>
