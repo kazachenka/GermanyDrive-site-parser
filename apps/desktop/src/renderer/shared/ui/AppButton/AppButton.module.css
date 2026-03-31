@@ -1,20 +1,54 @@
 .button {
+    appearance: none;
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+
+    outline: none;
+    border: none;
+
     height: 46px;
     padding: 0 18px;
     border-radius: 14px;
-    border: none;
     cursor: pointer;
+
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
+
     font-size: 14px;
     font-weight: 600;
+
     transition:
-            transform 0.2s ease,
-            background 0.2s ease,
-            box-shadow 0.2s ease,
-            opacity 0.2s ease;
+      transform 1s ease,
+      background-color 1s ease,
+      box-shadow 1s ease,
+      opacity 1s ease;
+}
+
+.button {
+    position: relative;
+    overflow: hidden;
+}
+
+.primary::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--accent-hover);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+
+    z-index: 0; /* важно */
+}
+
+.button > * {
+    position: relative;
+    z-index: 1; /* текст выше */
+}
+
+.primary:active {
+    background: var(--accent-hover);
 }
 
 .fullWidth {
@@ -23,7 +57,7 @@
 
 .primary {
     background: var(--accent);
-    transition: all 0.2s ease;
+    transition: all 1s ease;
     color: var(--text-primary);
 }
 

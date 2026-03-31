@@ -9,7 +9,7 @@
     --text-muted: #cbd5e1;
 
     --accent: linear-gradient(135deg, #4f8cff, #6366f1);
-    --accent-hover: #2563eb;
+    --accent-hover: linear-gradient(135deg, #6ea0ff, #7c7aff);
 
     --danger: #f87171;
 
