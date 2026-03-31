@@ -43,17 +43,19 @@
     },
     "files": [
       "out/**/*",
+      "node_modules/**/*",
       "package.json"
     ],
     "asar": true,
-    "npmRebuild": false,
+    "asarUnpack": [
+      "**/*.node"
+    ],
+    "npmRebuild": true,
     "win": {
       "target": [
         {
           "target": "nsis",
-          "arch": [
-            "x64"
-          ]
+          "arch": ["x64"]
         }
       ],
       "icon": "build/icon.ico"
@@ -63,10 +65,12 @@
       "allowToChangeInstallationDirectory": true,
       "perMachine": false
     },
-    "publish": {
-      "provider": "github",
-      "owner": "kazachenka",
-      "repo": "GermanyDrive-site-parser"
-    }
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "kazachenka",
+        "repo": "GermanyDrive-site-parser"
+      }
+    ]
   }
 }
