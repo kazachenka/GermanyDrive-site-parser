@@ -6,12 +6,7 @@
 
     padding: 32px;
 
-    background: linear-gradient(
-            160deg,
-            #334155 0%,
-            #1e293b 60%,
-            #0f172a 100%
-    );
+    background: var(--bg-secondary);
     color: var(--text-primary);
 }
 

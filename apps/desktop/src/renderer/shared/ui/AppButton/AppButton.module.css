@@ -22,12 +22,13 @@
 }
 
 .primary {
-    background: #3b82f6;
-    color: white;
+    background: var(--accent);
+    transition: all 0.2s ease;
+    color: var(--text-primary);
 }
 
 .primary:hover {
-    background: #2563eb;
+    background: var(--accent-hover);
 }
 
 .secondary {

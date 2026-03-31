@@ -46,7 +46,7 @@ export const PostLayout: React.FC<Props> = ({item, onSelectedImagesChange}) => {
             {!!item.price && (
               <div className={styles.priceInline}>
                 <span className={styles.priceInlineLabel}>Цена</span>
-                <span className={styles.priceInlineValue}>{item.price}€</span>
+                <span className={styles.priceInlineValue}>{item.price} €</span>
               </div>
             )}
           </div>
@@ -102,6 +102,7 @@ export const PostLayout: React.FC<Props> = ({item, onSelectedImagesChange}) => {
                   </div>
                 );
               })}
+              <div className={styles.empty}></div>
             </div>
           </>
         )}

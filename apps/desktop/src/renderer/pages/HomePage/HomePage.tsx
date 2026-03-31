@@ -59,33 +59,40 @@ export function HomePage() {
   }
 
   return (
-    <div
-      style={{padding: 24, display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column"}}>
-      <div style={{width: 500, marginBottom: 20}}>
-        <AppInput
-          label="Site Url"
-          type="text"
-          value={siteUrl}
-          onChange={(e) => setSiteUrl(e.target.value)}
-        />
+    <div className={styles.page}>
+      <div className={styles.card}>
+        <h2 className={styles.title}>Обработка сайта</h2>
 
-        <AppInput
-          label="Price"
-          type="number"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-      </div>
+        <div className={styles.inputs}>
+          <AppInput
+            label="Site Url"
+            type="text"
+            value={siteUrl}
+            onChange={(e) => setSiteUrl(e.target.value)}
+          />
 
-      <div className={styles.buttonWrapper}>
-        <AppButton onClick={processUrl} loading={isLoadingAuth}>
-          Обработать
-        </AppButton>
+          <AppInput
+            label="Price"
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+        </div>
 
-        <AppButton onClick={handleLogout} loading={isLoadingAuth}>
-          Выйти
-        </AppButton>
+        <div className={styles.actions}>
+          <AppButton onClick={processUrl} loading={isLoadingAuth} fullWidth>
+            Обработать
+          </AppButton>
+
+          <AppButton
+            onClick={handleLogout}
+            variant="secondary"
+            fullWidth
+          >
+            Выйти
+          </AppButton>
+        </div>
       </div>
     </div>
-  );
+  )
 }

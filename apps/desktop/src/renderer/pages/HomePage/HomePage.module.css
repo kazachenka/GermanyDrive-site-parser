@@ -1,5 +1,36 @@
-.buttonWrapper {
-  button {
-    margin: 12px;
-  }
+.page {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-secondary);
+}
+
+.card {
+  width: 420px;
+  padding: 32px;
+  border-radius: 20px;
+  background: var(--surface);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }

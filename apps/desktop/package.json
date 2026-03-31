@@ -7,6 +7,8 @@
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "preview": "electron-vite preview",
+    "dev:prod": "electron-vite preview",
+    "dev:prod:localdb": "electron-vite preview",
     "dist": "pnpm run build && electron-builder",
     "dist:win": "pnpm run build && electron-builder --win nsis",
     "dist:win:publish": "pnpm run build && electron-builder --win nsis --publish always"
@@ -64,7 +66,7 @@
     "publish": {
       "provider": "github",
       "owner": "kazachenka",
-      "repo": ""
+      "repo": "GermanyDrive-site-parser"
     }
   }
 }
