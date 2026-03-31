@@ -2,5 +2,6 @@ packages:
   - "apps/*"
   - "shared"
 allowBuilds:
+  electron-winstaller: false
   keytar: false
   lzma-native: false

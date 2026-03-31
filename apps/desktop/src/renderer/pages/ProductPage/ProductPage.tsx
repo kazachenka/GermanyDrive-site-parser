@@ -6,6 +6,8 @@ import {PostLayout} from "../../layouts/PostLayout/PostLayout.tsx";
 import {useNavigate} from "react-router-dom";
 import styles from "./ProductPage.module.css";
 import {AppLoader} from "../../shared/ui/AppLoader/AppLoader.tsx";
+import AppModal from "../../shared/ui/AppModal/AppModal.tsx";
+import {styleText} from "node:util";
 
 export function sanitizeHtml(html: string): string {
   const parser = new DOMParser();
@@ -20,17 +22,23 @@ export function ProductPage() {
   const { siteParserLoading, state, reset, setParsedData, setSelectedImages, sentToTelegramInTest, sentToTelegramInProd } = useSiteParser();
   const navigate = useNavigate();
   const hiddenRef = useRef<HTMLDivElement>(null);
+  const [isOpenModal, setOpenModal] = useState<boolean>(false);
 
   const onSelectedImagesChange = (images: string[]) => {
     setSelectedImages(images);
   }
 
   const sentToTelegramTestMode = async () => {
-    sentToTelegramInTest()
+    sentToTelegramInTest();
   }
 
   const sentToTelegramProdMode = async () => {
-    sentToTelegramInProd()
+    sentToTelegramInProd();
+    setOpenModal(false);
+  }
+
+  const openConfirmSendToTelegram = async () => {
+    setOpenModal(true);
   }
 
   const clickBack = async () => {
@@ -95,11 +103,20 @@ export function ProductPage() {
         }
 
         {state.parsedData &&
-          <AppButton onClick={sentToTelegramProdMode}>
+          <AppButton onClick={openConfirmSendToTelegram}>
             Отправка в группу
           </AppButton>
         }
       </div>
+
+      <AppModal isOpen={isOpenModal} onClose={() => setOpenModal(false)}>
+        <p className={styles.modalText}>Вы действительно желаете отправить в группу?</p>
+        <div className={styles.buttonWrapper}>
+          <AppButton onClick={() => setOpenModal(false)}>Отмена</AppButton>
+          <AppButton onClick={() => sentToTelegramProdMode()}>Отправить</AppButton>
+        </div>
+
+      </AppModal>
 
     </div>
   );

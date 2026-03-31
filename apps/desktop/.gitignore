@@ -1,3 +1,8 @@
-out/
+# electron build
+release/
 dist/
-build/
+out/
+
+# optional
+*.exe
+*.blockmap
