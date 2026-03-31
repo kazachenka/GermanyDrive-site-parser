@@ -25,6 +25,9 @@ export default defineConfig({
   },
   renderer: {
     root: resolve(__dirname, "src/renderer"),
-    plugins: [react()]
-  }
+    plugins: [react()],
+    define: {
+      "import.meta.env.VITE_API_URL": JSON.stringify(env.VITE_API_URL)
+    }
+  },
 })
