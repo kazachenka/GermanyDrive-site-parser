@@ -12,7 +12,7 @@ export function AppProviders({children}: PropsWithChildren) {
                 {children}
               </SiteParserProvider>
             </AuthProvider>
-          </ErrorProvider>;
+          </ErrorProvider>
         </UpdaterProvider>
 
 
