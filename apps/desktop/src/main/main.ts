@@ -53,8 +53,6 @@ function setupAutoUpdate() {
   })
 
   autoUpdater.on("update-available", async (info) => {
-    console.log("Update available:", info.version)
-
     if (!mainWindow) return
 
     const result = await dialog.showMessageBox(mainWindow, {
@@ -93,8 +91,6 @@ function setupAutoUpdate() {
   })
 
   autoUpdater.on("error", async (err) => {
-    console.error("Auto update error:", err)
-
     if (!mainWindow) return
 
     setBlockedState(false)
@@ -108,9 +104,6 @@ function setupAutoUpdate() {
   })
 
   autoUpdater.on("download-progress", (progress) => {
-    console.log(`Download speed: ${progress.bytesPerSecond}`)
-    console.log(`Downloaded: ${progress.percent}%`)
-
     if (!mainWindow) return
 
     mainWindow.setProgressBar(progress.percent / 100)
