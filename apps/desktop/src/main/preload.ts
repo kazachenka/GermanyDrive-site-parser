@@ -28,3 +28,19 @@ contextBridge.exposeInMainWorld("parse", {
   sentToTelegramTest: (data: MobileDeRuPostItemType) => electron.ipcRenderer.invoke("parse:sent-to-telegram-test-mode", data),
   sentToTelegramProd: (data: MobileDeRuPostItemType) => electron.ipcRenderer.invoke("parse:sent-to-telegram-prod-mode", data),
 });
+
+contextBridge.exposeInMainWorld("updater", {
+  onBlockUi: (callback: (payload: { blocked: boolean; title: string }) => void) => {
+    ipcRenderer.on("updater:block-ui", (_event, payload) => callback(payload))
+  },
+  onProgress: (
+    callback: (payload: {
+      percent: number
+      bytesPerSecond: number
+      transferred: number
+      total: number
+    }) => void
+  ) => {
+    ipcRenderer.on("updater:progress", (_event, payload) => callback(payload))
+  }
+})

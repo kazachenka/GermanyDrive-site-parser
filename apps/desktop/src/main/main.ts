@@ -4,8 +4,11 @@ import { autoUpdater } from "electron-updater"
 import { registerAuthIpcHandlers } from "./ipc/auth"
 import { registerParseIpcHandlers } from "./ipc/parse"
 
+let mainWindow: BrowserWindow | null = null
+let isUpdating = false
+
 function createWindow() {
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 800,
     webPreferences: {
@@ -16,45 +19,123 @@ function createWindow() {
   })
 
   if (process.env.ELECTRON_RENDERER_URL) {
-    win.loadURL(process.env.ELECTRON_RENDERER_URL)
+    void mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL)
   } else {
-    win.loadFile(join(__dirname, "../renderer/index.html"))
+    void mainWindow.loadFile(join(__dirname, "../renderer/index.html"))
   }
+
+  mainWindow.on("close", (event) => {
+    if (isUpdating) {
+      event.preventDefault()
+    }
+  })
+}
+
+function setBlockedState(blocked: boolean, title?: string) {
+  isUpdating = blocked
+
+  if (!mainWindow) return
+
+  mainWindow.setProgressBar(blocked ? 0 : -1)
+
+  mainWindow.webContents.send("updater:block-ui", {
+    blocked,
+    title: title ?? ""
+  })
 }
 
 function setupAutoUpdate() {
-  autoUpdater.autoDownload = true
-  autoUpdater.autoInstallOnAppQuit = true
+  autoUpdater.autoDownload = false
+  autoUpdater.autoInstallOnAppQuit = false
 
   autoUpdater.on("checking-for-update", () => {
     console.log("Checking for update...")
   })
 
-  autoUpdater.on("update-available", (info) => {
+  autoUpdater.on("update-available", async (info) => {
     console.log("Update available:", info.version)
+
+    if (!mainWindow) return
+
+    const result = await dialog.showMessageBox(mainWindow, {
+      type: "info",
+      buttons: ["Скачать обновление", "Позже"],
+      defaultId: 0,
+      cancelId: 1,
+      title: "Доступно обновление",
+      message: `Доступна новая версия ${info.version}.`,
+      detail: "Скачать и установить обновление сейчас?"
+    })
+
+    if (result.response !== 0) {
+      return
+    }
+
+    try {
+      setBlockedState(true, "Скачивание обновления...")
+      await autoUpdater.downloadUpdate()
+    } catch (err) {
+      console.error("Download update error:", err)
+
+      setBlockedState(false)
+
+      await dialog.showMessageBox(mainWindow, {
+        type: "error",
+        title: "Ошибка обновления",
+        message: "Не удалось скачать обновление.",
+        detail: err instanceof Error ? err.message : String(err)
+      })
+    }
   })
 
   autoUpdater.on("update-not-available", () => {
     console.log("No updates found")
   })
 
-  autoUpdater.on("error", (err) => {
+  autoUpdater.on("error", async (err) => {
     console.error("Auto update error:", err)
+
+    if (!mainWindow) return
+
+    setBlockedState(false)
+
+    await dialog.showMessageBox(mainWindow, {
+      type: "error",
+      title: "Ошибка автообновления",
+      message: "Во время проверки или загрузки обновления произошла ошибка.",
+      detail: err instanceof Error ? err.message : String(err)
+    })
   })
 
   autoUpdater.on("download-progress", (progress) => {
     console.log(`Download speed: ${progress.bytesPerSecond}`)
     console.log(`Downloaded: ${progress.percent}%`)
+
+    if (!mainWindow) return
+
+    mainWindow.setProgressBar(progress.percent / 100)
+
+    mainWindow.webContents.send("updater:progress", {
+      percent: progress.percent,
+      bytesPerSecond: progress.bytesPerSecond,
+      transferred: progress.transferred,
+      total: progress.total
+    })
   })
 
   autoUpdater.on("update-downloaded", async () => {
-    const result = await dialog.showMessageBox({
+    if (!mainWindow) return
+
+    setBlockedState(false)
+
+    const result = await dialog.showMessageBox(mainWindow, {
       type: "info",
-      buttons: ["Перезапустить сейчас", "Позже"],
+      buttons: ["Установить и перезапустить", "Позже"],
       defaultId: 0,
       cancelId: 1,
       title: "Обновление готово",
-      message: "Новая версия приложения загружена. Перезапустить приложение сейчас?"
+      message: "Новая версия приложения загружена.",
+      detail: "Установить обновление и перезапустить приложение сейчас?"
     })
 
     if (result.response === 0) {
@@ -67,11 +148,10 @@ app.whenReady().then(() => {
   registerParseIpcHandlers()
   registerAuthIpcHandlers()
   createWindow()
-
   setupAutoUpdate()
 
   if (!process.env.ELECTRON_RENDERER_URL) {
-    autoUpdater.checkForUpdatesAndNotify()
+    void autoUpdater.checkForUpdates()
   }
 })
 

@@ -19,5 +19,19 @@ declare global {
       sentToTelegramTest(data: import('@site-parser/shared').MobileDeRuPostItemType): Promise<void>
       sentToTelegramProd(data: import('@site-parser/shared').MobileDeRuPostItemType): Promise<void>
     }
+
+    updater: {
+      onBlockUi: (
+        callback: (payload: { blocked: boolean; title: string }) => void
+      ) => () => void
+      onProgress: (
+        callback: (payload: {
+          percent: number
+          bytesPerSecond: number
+          transferred: number
+          total: number
+        }) => void
+      ) => () => void
+    }
   }
 }
