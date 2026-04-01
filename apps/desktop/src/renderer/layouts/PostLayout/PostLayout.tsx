@@ -9,7 +9,7 @@ type Props = {
 
 export const PostLayout: React.FC<Props> = ({item, onSelectedImagesChange}) => {
   const limitedImages = useMemo(() => {
-    return (item.imageUrls ?? []).slice(0, 10);
+    return item.imageUrls ?? [];
   }, [item.imageUrls]);
 
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
@@ -31,6 +31,10 @@ export const PostLayout: React.FC<Props> = ({item, onSelectedImagesChange}) => {
     setSelectedImages((prev) => {
       if (prev.includes(imageUrl)) {
         return prev.filter((img) => img !== imageUrl);
+      }
+
+      if (prev.length >= 10) {
+        return prev;
       }
 
       return [...prev, imageUrl];
@@ -66,28 +70,36 @@ export const PostLayout: React.FC<Props> = ({item, onSelectedImagesChange}) => {
             <div className={styles.sectionHeader}>
               <span>Фото для постинга</span>
               <span className={styles.counter}>
-                Выбрано: {selectedImages.length} / {limitedImages.length}
+                Выбрано: {selectedImages.length} / 10
               </span>
             </div>
 
             <div className={styles.thumbs}>
               {limitedImages.map((img, i) => {
-                const isSelected = selectedImages.includes(img);
+                const selectedIndex = selectedImages.indexOf(img);
+                const isSelected = selectedIndex !== -1;
 
                 return (
-                  <div key={`${img}-${i}`}
-                         className={styles.thumbCard}
-                         onClick={() => toggleImageSelection(img)}
+                  <div
+                    key={`${img}-${i}`}
+                    className={`${styles.thumbCard} ${isSelected ? styles.thumbCardSelected : ""}`}
+                    onClick={() => toggleImageSelection(img)}
                   >
                     <button
                       type="button"
-                      className={styles.thumbButton}
+                      className={`${styles.thumbButton} ${isSelected ? styles.thumbButtonSelected : ""}`}
                     >
                       <img
                         src={img}
                         alt={`car-${i + 1}`}
-                        className={styles.thumb}
+                        className={`${styles.thumb} ${isSelected ? styles.thumbSelected : ""}`}
                       />
+
+                      {isSelected && (
+                        <div className={styles.selectedBadge}>
+                          {selectedIndex + 1}
+                        </div>
+                      )}
                     </button>
 
                     <div className={styles.checkboxLabel}>
@@ -97,7 +109,9 @@ export const PostLayout: React.FC<Props> = ({item, onSelectedImagesChange}) => {
                         className={styles.checkbox}
                         readOnly
                       />
-                      <span className={styles.checkboxText}>Сохранить</span>
+                      <span className={styles.checkboxText}>
+          {isSelected ? `Выбрано: ${selectedIndex + 1}` : "Сохранить"}
+        </span>
                     </div>
                   </div>
                 );

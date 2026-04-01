@@ -76,7 +76,7 @@ export function HomePage() {
             label="Цена €"
             type="number"
             value={price}
-            placeholder="7673"
+            placeholder="Цена"
             onChange={(e) => setPrice(e.target.value)}
           />
         </div>

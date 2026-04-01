@@ -23,9 +23,7 @@
   min-height: 0;
   overflow-x: hidden;
   box-sizing: border-box;
-
   overflow-y: auto;
-
   scrollbar-width: thin;
   scrollbar-color: rgba(122, 141, 196, 0.7) transparent;
 }
@@ -169,17 +167,25 @@
   box-sizing: border-box;
   min-width: 0;
   overflow: hidden;
-
   display: grid;
   grid-template-rows: 110px 1fr;
   gap: 8px;
+  transition: background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .thumbCard:hover {
-  background: rgba(255,255,255,0.04);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* можно повесить на выбранную карточку */
+.thumbCardSelected {
+  background: rgba(99, 102, 241, 0.08);
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.22);
 }
 
 .thumbButton {
+  position: relative;
   width: 100%;
   height: 110px;
   min-height: 110px;
@@ -198,6 +204,15 @@
   transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
 
+.thumbButtonSelected {
+  border-color: rgba(99, 102, 241, 0.55);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+.thumb::after {
+  display: none;
+}
+
 .thumb {
   width: 100%;
   height: 100%;
@@ -205,6 +220,33 @@
   object-fit: cover;
   object-position: center;
   border-radius: 12px;
+}
+
+/* лёгкое затемнение выбранной картинки */
+.thumbSelected {
+  filter: brightness(0.9);
+}
+
+.selectedBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #7c8cff 0%, #5b6bdb 100%);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow:
+    0 6px 14px rgba(0, 0, 0, 0.28),
+    0 0 0 2px rgba(20, 24, 40, 0.55);
+  pointer-events: none;
+  z-index: 2;
 }
 
 .checkboxLabel {

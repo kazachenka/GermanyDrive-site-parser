@@ -62,13 +62,6 @@ export function LoginPage() {
             {isLoadingAuth ? "Входим..." : "Войти"}
           </AppButton>
         </form>
-
-        <div className={styles.footer}>
-          <span className={styles.footerText}>Нет аккаунта?</span>
-          <Link to="/register" className={styles.link}>
-            Зарегистрироваться
-          </Link>
-        </div>
       </AppCard>
     </AuthLayout>
   );
