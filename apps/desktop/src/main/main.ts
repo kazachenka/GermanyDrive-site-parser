@@ -3,6 +3,7 @@ import { join } from "node:path"
 import { autoUpdater } from "electron-updater"
 import { registerAuthIpcHandlers } from "./ipc/auth"
 import { registerParseIpcHandlers } from "./ipc/parse"
+import {registerVersionIpcHandlers} from "./ipc/version";
 
 let mainWindow: BrowserWindow | null = null
 let isUpdating = false
@@ -11,6 +12,7 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 800,
+    autoHideMenuBar: true,
     webPreferences: {
       preload: join(__dirname, "../preload/index.js"),
       contextIsolation: true,
@@ -18,25 +20,27 @@ function createWindow() {
     }
   })
 
+  mainWindow.setMenu(null);
+
   if (process.env.ELECTRON_RENDERER_URL) {
-    void mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL)
+    void mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL);
   } else {
-    void mainWindow.loadFile(join(__dirname, "../renderer/index.html"))
+    void mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
 
   mainWindow.on("close", (event) => {
     if (isUpdating) {
-      event.preventDefault()
+      event.preventDefault();
     }
   })
 }
 
 function setBlockedState(blocked: boolean, title?: string) {
-  isUpdating = blocked
+  isUpdating = blocked;
 
   if (!mainWindow) return
 
-  mainWindow.setProgressBar(blocked ? 0 : -1)
+  mainWindow.setProgressBar(blocked ? 0 : -1);
 
   mainWindow.webContents.send("updater:block-ui", {
     blocked,
@@ -45,11 +49,11 @@ function setBlockedState(blocked: boolean, title?: string) {
 }
 
 function setupAutoUpdate() {
-  autoUpdater.autoDownload = false
-  autoUpdater.autoInstallOnAppQuit = false
+  autoUpdater.autoDownload = false;
+  autoUpdater.autoInstallOnAppQuit = false;
 
   autoUpdater.on("checking-for-update", () => {
-    console.log("Checking for update...")
+    console.log("Checking for update...");
   })
 
   autoUpdater.on("update-available", async (info) => {
@@ -66,16 +70,16 @@ function setupAutoUpdate() {
     })
 
     if (result.response !== 0) {
-      return
+      return;
     }
 
     try {
-      setBlockedState(true, "Скачивание обновления...")
-      await autoUpdater.downloadUpdate()
+      setBlockedState(true, "Скачивание обновления...");
+      await autoUpdater.downloadUpdate();
     } catch (err) {
-      console.error("Download update error:", err)
+      console.error("Download update error:", err);
 
-      setBlockedState(false)
+      setBlockedState(false);
 
       await dialog.showMessageBox(mainWindow, {
         type: "error",
@@ -87,7 +91,7 @@ function setupAutoUpdate() {
   })
 
   autoUpdater.on("update-not-available", () => {
-    console.log("No updates found")
+    console.log("No updates found");
   })
 
   autoUpdater.on("error", async (err) => {
@@ -138,10 +142,11 @@ function setupAutoUpdate() {
 }
 
 app.whenReady().then(() => {
-  registerParseIpcHandlers()
-  registerAuthIpcHandlers()
-  createWindow()
-  setupAutoUpdate()
+  registerParseIpcHandlers();
+  registerAuthIpcHandlers();
+  registerVersionIpcHandlers();
+  createWindow();
+  setupAutoUpdate();
 
   if (!process.env.ELECTRON_RENDERER_URL) {
     void autoUpdater.checkForUpdates()
@@ -150,6 +155,6 @@ app.whenReady().then(() => {
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
-    app.quit()
+    app.quit();
   }
 })

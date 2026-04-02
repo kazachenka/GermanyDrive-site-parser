@@ -20,6 +20,10 @@ declare global {
       sentToTelegramProd(data: import('@site-parser/shared').MobileDeRuPostItemType): Promise<void>
     }
 
+    appInfo: {
+      getVersion: () => Promise<string>
+    }
+
     updater: {
       onBlockUi: (
         callback: (payload: { blocked: boolean; title: string }) => void
