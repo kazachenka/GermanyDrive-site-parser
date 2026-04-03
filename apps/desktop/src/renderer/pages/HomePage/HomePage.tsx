@@ -41,7 +41,7 @@ export function HomePage() {
 
         setProductPrice(price);
 
-        navigate("/product")
+        navigate("/parser/product")
       } else {
         showError('Нужно ввести ссылку и цену');
       }

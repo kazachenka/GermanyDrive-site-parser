@@ -1,10 +1,12 @@
-import {Navigate, Route, Routes} from "react-router-dom"
-import {GuestRoute} from "../../shared/router/GuestRoute.tsx"
-import {ProtectedRoute} from "../../shared/router/ProtectedRoute.tsx"
-import {LoginPage} from "../../pages/LoginPage/LoginPage.tsx"
-import {RegisterPage} from "../../pages/RegisterPage/RegisterPage.tsx"
-import {HomePage} from "../../pages/HomePage/HomePage.tsx"
-import {ProductPage} from "../../pages/ProductPage/ProductPage.tsx";
+import {Navigate, Outlet, Route, Routes} from "react-router-dom";
+import { GuestRoute } from "../../shared/router/GuestRoute.tsx";
+import { ProtectedRoute } from "../../shared/router/ProtectedRoute.tsx";
+
+import { LoginPage } from "../../pages/LoginPage/LoginPage.tsx";
+import { RegisterPage } from "../../pages/RegisterPage/RegisterPage.tsx";
+import { HomePage } from "../../pages/HomePage/HomePage.tsx";
+import { ProductPage } from "../../pages/ProductPage/ProductPage.tsx";
+import { AdminPage } from "../../pages/AdminPage/AdminPage.tsx";
 
 export function AppRoutes() {
   return (
@@ -13,35 +15,43 @@ export function AppRoutes() {
         path="/login"
         element={
           <GuestRoute>
-            <LoginPage/>
+            <LoginPage />
           </GuestRoute>
         }
       />
+
       <Route
         path="/register"
         element={
           <GuestRoute>
-            <RegisterPage/>
+            <RegisterPage />
           </GuestRoute>
         }
       />
+
       <Route
-        path="/product"
+        path="/parser"
         element={
           <ProtectedRoute>
-            <ProductPage/>
+            <Outlet />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<HomePage />} />
+        <Route path="product" element={<ProductPage />} />
+      </Route>
+
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <AdminPage />
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <HomePage/>
-          </ProtectedRoute>
-        }
-      />
-      <Route path="*" element={<Navigate to="/" replace/>}/>
+
+      <Route path="/" element={<Navigate to="/parser" replace />} />
+      <Route path="*" element={<Navigate to="/parser" replace />} />
     </Routes>
-  )
+  );
 }

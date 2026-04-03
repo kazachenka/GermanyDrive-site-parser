@@ -14,6 +14,8 @@ import {
 	refreshSession,
 	registerUser,
 } from '../services/auth.service'
+import { getDb } from "../db";
+import { findUserByEmail } from "../utils/auth.service.utils";
 
 const auth = new Hono<AppContext>()
 
@@ -95,13 +97,16 @@ auth.get('/me', async (c) => {
 	}
 
 	try {
-		const payload = await verifyAccessToken(token, c.env.JWT_SECRET)
+		const db = getDb(c.env);
+		const payload = await verifyAccessToken(token, c.env.JWT_SECRET);
+		const user = await findUserByEmail(db, payload.email as string);
 
 		return c.json({
 			ok: true,
 			user: {
 				id: Number(payload.sub),
 				email: payload.email,
+				isAdmin: user.isAdmin,
 			},
 		})
 	} catch (error) {

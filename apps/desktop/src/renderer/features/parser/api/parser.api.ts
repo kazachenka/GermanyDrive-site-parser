@@ -1,4 +1,4 @@
-import {getHtmlByUrlRequest, sentDataToTelegramTest, sentDataToTelegramProd} from "./parser.requests.ts";
+import { getHtmlByUrlRequest, sentDataToTelegramTest, sentDataToTelegramProd } from "./parser.requests.ts";
 import { MobileDeRuPostItemType } from "@site-parser/shared"
 
 export const parserApi = {

@@ -21,7 +21,7 @@ export function RegisterPage() {
 
     try {
       await register({email, password});
-      navigate("/");
+      navigate("/parser");
     } catch {
       // ошибка уже в context.error
     }

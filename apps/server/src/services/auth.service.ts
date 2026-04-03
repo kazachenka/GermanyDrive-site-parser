@@ -54,6 +54,7 @@ export async function registerUser(
 		passwordSalt: salt,
 		createdAt: now,
 		updatedAt: now,
+		isAdmin: false,
 	})
 
 	const accessToken = await createAccessToken(user, env.JWT_SECRET)
@@ -123,6 +124,7 @@ export async function loginUser(
 			user: {
 				id: user.id,
 				email: user.email,
+				isAdmin: user.isAdmin,
 			},
 			accessToken,
 			refreshToken,

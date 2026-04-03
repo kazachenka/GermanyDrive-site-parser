@@ -1,5 +1,5 @@
 import {useState, type FormEvent} from "react";
-import {Link, useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {useAuth} from "../../features/auth/model/auth.context";
 import {AuthLayout} from "../../layouts/AuthLayout/AuthLayout";
 import {AppButton} from "../../shared/ui/AppButton/AppButton";
@@ -21,7 +21,7 @@ export function LoginPage() {
 
     try {
       await login({email, password});
-      navigate("/");
+      navigate("/parser");
     } catch {
     }
   };

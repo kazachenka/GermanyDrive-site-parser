@@ -20,6 +20,12 @@ declare global {
       sentToTelegramProd(data: import('@site-parser/shared').MobileDeRuPostItemType): Promise<void>
     }
 
+    user: {
+      patchUserEmail(data: import('@site-parser/shared').UserDto): Promise<void>;
+      patchUserPassword(data: import('@site-parser/shared').UserPatchPassword): Promise<void>;
+      getUsers(): Promise<import('@site-parser/shared').UserDto[]>;
+    }
+
     appInfo: {
       getVersion: () => Promise<string>
     }

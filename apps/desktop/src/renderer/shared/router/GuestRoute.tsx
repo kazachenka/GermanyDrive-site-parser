@@ -15,7 +15,7 @@ export function GuestRoute({children}: GuestRouteProps) {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace/>;
+    return <Navigate to="/parser" replace/>;
   }
 
   return children;

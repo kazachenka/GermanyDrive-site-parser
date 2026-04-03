@@ -20,6 +20,7 @@
     initialized: boolean;
     error: string | null;
     isAuthenticated: boolean;
+    isAdmin: boolean;
     login: (payload: LoginPayload) => Promise<void>;
     register: (payload: RegisterPayload) => Promise<void>;
     fetchMe: () => Promise<void>;
@@ -153,6 +154,8 @@
         isLoadingAuth: state.isLoading,
         initialized: state.initialized,
         error: state.error,
+        isAdmin: true,
+        // isAdmin: Boolean(state.user?.isAdmin),
         isAuthenticated: Boolean(state.user),
         login,
         register,

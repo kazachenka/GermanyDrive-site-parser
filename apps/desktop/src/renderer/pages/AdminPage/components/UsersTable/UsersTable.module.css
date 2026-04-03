@@ -1,0 +1,65 @@
+.wrapper {
+  margin-top: 24px;
+}
+
+.table {
+  background: rgba(30, 40, 60, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+}
+
+/* HEADER */
+.header {
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  padding: 14px 18px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ROW */
+.row {
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  align-items: center;
+  padding: 14px 18px;
+  transition: all 0.2s ease;
+}
+
+/* hover эффект */
+.row:hover {
+  background: rgba(88, 130, 255, 0.08);
+}
+
+/* email */
+.email {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 15px;
+}
+
+/* actions */
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* кнопки */
+.iconBtn {
+  border: none;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* hover кнопок */
+.iconBtn:hover {
+  background: rgba(88, 130, 255, 0.2);
+  box-shadow: 0 0 12px rgba(88, 130, 255, 0.25);
+}

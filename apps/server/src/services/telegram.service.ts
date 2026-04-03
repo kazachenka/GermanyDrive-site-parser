@@ -22,7 +22,7 @@ type PreparedTelegramPhoto = {
 }
 
 export class PrintMobileDeRuService {
-	private readonly MAX_MEDIA_CAPTION_LENGTH = 1024
+	private readonly MAX_MEDIA_CAPTION_LENGTH = 1424
 	private readonly MAX_TELEGRAM_PHOTO_BYTES = 10 * 1024 * 1024
 	private readonly images: ImagesBinding
 

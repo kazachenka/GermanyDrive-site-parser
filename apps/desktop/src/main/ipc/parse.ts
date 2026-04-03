@@ -1,5 +1,5 @@
-import {ipcMain} from "electron";
-import {getHtmlByUrl, sentToTelegramInTestMode, sentToTelegramInProdMode} from "../services/parser-api.service";
+import { ipcMain } from "electron";
+import { getHtmlByUrl, sentToTelegramInTestMode, sentToTelegramInProdMode } from "../services/parser-api.service";
 import { MobileDeRuPostItemType } from "@site-parser/shared"
 
 export function registerParseIpcHandlers() {

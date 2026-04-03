@@ -43,7 +43,7 @@ export function ProductPage() {
 
   const clickBack = async () => {
     reset();
-    navigate('/');
+    navigate('/parser');
   }
 
   const sanitizedHtml = useMemo(() => {

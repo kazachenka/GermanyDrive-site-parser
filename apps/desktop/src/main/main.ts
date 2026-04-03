@@ -3,7 +3,8 @@ import { join } from "node:path"
 import { autoUpdater } from "electron-updater"
 import { registerAuthIpcHandlers } from "./ipc/auth"
 import { registerParseIpcHandlers } from "./ipc/parse"
-import {registerVersionIpcHandlers} from "./ipc/version";
+import { registerVersionIpcHandlers } from "./ipc/version";
+import {registerUserIpcHandlers} from "./ipc/user";
 
 let mainWindow: BrowserWindow | null = null
 let isUpdating = false
@@ -20,11 +21,10 @@ function createWindow() {
     }
   })
 
-  mainWindow.setMenu(null);
-
   if (process.env.ELECTRON_RENDERER_URL) {
     void mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL);
   } else {
+    mainWindow.setMenu(null);
     void mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
 
@@ -147,6 +147,7 @@ app.whenReady().then(() => {
   registerVersionIpcHandlers();
   createWindow();
   setupAutoUpdate();
+  registerUserIpcHandlers();
 
   if (!process.env.ELECTRON_RENDERER_URL) {
     void autoUpdater.checkForUpdates()
