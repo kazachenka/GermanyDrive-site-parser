@@ -5,6 +5,10 @@ import { NavLink } from "react-router-dom";
 export function AppHeader() {
   const { isAdmin, isAuthenticated } = useAuth();
 
+  if (!isAuthenticated) {
+    return (<></>);
+  }
+
   return (
     <header className={styles.header}>
       {isAdmin && (

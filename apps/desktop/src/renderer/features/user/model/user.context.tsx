@@ -46,18 +46,15 @@ export function UserProvider({ children }: UserProviderProps) {
   const fetchUsers = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    console.log("FETCH USERS START");
 
     try {
       const data = await userApi.getAllUsers();
-      console.log("FETCH USERS RESULT:", data);
       setUsers(data);
     } catch (err) {
       console.error("Failed to fetch users", err);
       setError("Не удалось загрузить пользователей");
     } finally {
       setIsLoading(false);
-      console.log("FETCH USERS EnDEd");
     }
   }, []);
 
