@@ -1,5 +1,5 @@
 import electron, {contextBridge, ipcRenderer} from "electron";
-import {MobileDeRuPostItemType, UserDto, UserPatchPassword} from "@site-parser/shared";
+import {MobileDeRuPostItemType, UserDto, UserPatchPassword, UserPatchTelegramId} from "@site-parser/shared";
 
 contextBridge.exposeInMainWorld("auth", {
   getAccessToken: (): Promise<string | null> =>
@@ -33,6 +33,9 @@ contextBridge.exposeInMainWorld("user", {
   getUsers: () => electron.ipcRenderer.invoke("user:get-users"),
   patchUserEmail: (data: UserDto) => electron.ipcRenderer.invoke("user:patch-email", data),
   patchUserPassword: (data: UserPatchPassword) => electron.ipcRenderer.invoke("user:patch-password", data),
+  createUser: (data: UserDto) => electron.ipcRenderer.invoke("user:add-user", data),
+  removeUser: (id: number) => electron.ipcRenderer.invoke("user:remove-user", id),
+  updateTelegramId: (data: UserPatchTelegramId) => electron.ipcRenderer.invoke("user:update-telegram-id", data),
 });
 
 contextBridge.exposeInMainWorld("updater", {

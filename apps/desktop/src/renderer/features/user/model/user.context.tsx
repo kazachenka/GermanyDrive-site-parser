@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { userApi } from "../api/user.api.ts";
-import { UserDto, UserPatchPassword } from '@site-parser/shared'
+import {RegisterRequestDto, UserDto, UserPatchPassword, UserPatchTelegramId} from '@site-parser/shared'
 import {useError} from "../../error/error.context.tsx";
 import {useAuth} from "../../auth/model/auth.context.tsx";
 
@@ -19,6 +19,9 @@ interface UserContextValue {
   fetchUsers: () => Promise<void>;
   updateEmail: (data: UserDto) => Promise<void>;
   updatePassword: (data: UserPatchPassword) => Promise<void>;
+  createUser: (data: RegisterRequestDto) => Promise<void>;
+  deleteUser: (id: number) => Promise<void>;
+  updateTelegramId: (data: UserPatchTelegramId) => Promise<void>;
 }
 
 const UserContext = createContext<UserContextValue | undefined>(undefined);
@@ -31,7 +34,7 @@ export function UserProvider({ children }: UserProviderProps) {
   const [users, setUsers] = useState<UserDto[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const {showError} = useError();
+  const { showError } = useError();
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
@@ -43,15 +46,18 @@ export function UserProvider({ children }: UserProviderProps) {
   const fetchUsers = useCallback(async () => {
     setIsLoading(true);
     setError(null);
+    console.log("FETCH USERS START");
 
     try {
       const data = await userApi.getAllUsers();
+      console.log("FETCH USERS RESULT:", data);
       setUsers(data);
     } catch (err) {
       console.error("Failed to fetch users", err);
       setError("Не удалось загрузить пользователей");
     } finally {
       setIsLoading(false);
+      console.log("FETCH USERS EnDEd");
     }
   }, []);
 
@@ -83,6 +89,48 @@ export function UserProvider({ children }: UserProviderProps) {
     }
   }, []);
 
+  const createUser = useCallback(
+    async (data: RegisterRequestDto) => {
+      try {
+        await userApi.createUser(data);
+        await fetchUsers();
+      } catch (err) {
+        setError("Не удалось создать пользователя");
+        throw err;
+      }
+    },
+    [fetchUsers]
+  );
+
+  const deleteUser = useCallback(
+    async (id: number) => {
+      try {
+        await userApi.deleteUser(id);
+        await fetchUsers();
+      } catch (err) {
+        setError("Не удалось удалить пользователя");
+        throw err;
+      }
+    },
+    [fetchUsers]
+  );
+
+  const updateTelegramId = useCallback(
+    async (data: UserPatchTelegramId) => {
+      setError(null);
+
+      try {
+        await userApi.patchTelegramId(data);
+        await fetchUsers();
+      } catch (err) {
+        console.error("Failed to update telegramId", err);
+        setError("Не удалось обновить telegramId");
+        throw err;
+      }
+    },
+    [fetchUsers]
+  );
+
   useEffect(() => {
     if (isAuthenticated) {
       void fetchUsers();
@@ -98,8 +146,11 @@ export function UserProvider({ children }: UserProviderProps) {
       fetchUsers,
       updateEmail,
       updatePassword,
+      createUser,
+      deleteUser,
+      updateTelegramId
     }),
-    [users, isLoading, error, fetchUsers, updateEmail, updatePassword]
+    [users, isLoading, error, fetchUsers, updateEmail, updatePassword, createUser, deleteUser, updateTelegramId]
   );
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

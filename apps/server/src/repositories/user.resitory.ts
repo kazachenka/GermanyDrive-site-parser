@@ -18,12 +18,13 @@ export async function createUser(db: any, data: {
 	passwordSalt: string
 	createdAt: string
 	updatedAt: string
+	telegramId: number
 	isAdmin: boolean
 }) {
 	const result = await db
 	.insert(users)
 	.values(data)
-	.returning({id: users.id, email: users.email, isAdmin: users.isAdmin})
+	.returning({id: users.id, email: users.email, isAdmin: users.isAdmin, telegramId: users.telegramId})
 
 	return result[0]
 }

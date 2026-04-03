@@ -24,6 +24,9 @@ declare global {
       patchUserEmail(data: import('@site-parser/shared').UserDto): Promise<void>;
       patchUserPassword(data: import('@site-parser/shared').UserPatchPassword): Promise<void>;
       getUsers(): Promise<import('@site-parser/shared').UserDto[]>;
+      createUser(data: import('@site-parser/shared').RegisterRequestDto): Promise<void>;
+      removeUser(id: number): Promise<void>;
+      updateTelegramId(data: import('@site-parser/shared').UserPatchTelegramId): Promise<void>
     }
 
     appInfo: {

@@ -15,6 +15,13 @@
       "when": 1774864475306,
       "tag": "0001_add_telegram_id_to_users",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1775210994971,
+      "tag": "0002_add_admin_role",
+      "breakpoints": true
     }
   ]
 }

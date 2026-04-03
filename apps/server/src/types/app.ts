@@ -15,6 +15,6 @@ export type Bindings = {
 }
 
 export type UserContext = {
-	id: string
+	id: number
 	email: string
 }

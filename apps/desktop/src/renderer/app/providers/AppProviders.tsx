@@ -17,6 +17,4 @@ export function AppProviders({children}: PropsWithChildren) {
             </AuthProvider>
           </ErrorProvider>
         </UpdaterProvider>
-
-
 }

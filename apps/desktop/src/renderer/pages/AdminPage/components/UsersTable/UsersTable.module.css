@@ -1,5 +1,6 @@
 .wrapper {
   margin-top: 24px;
+  width: 600px;
 }
 
 .table {
@@ -13,7 +14,7 @@
 /* HEADER */
 .header {
   display: grid;
-  grid-template-columns: 1fr 120px;
+  grid-template-columns: 1.2fr 1fr 220px;
   padding: 14px 18px;
   font-size: 14px;
   color: rgba(255, 255, 255, 0.6);
@@ -23,10 +24,19 @@
 /* ROW */
 .row {
   display: grid;
-  grid-template-columns: 1fr 120px;
+  grid-template-columns: 1.2fr 1fr 220px;
   align-items: center;
   padding: 14px 18px;
   transition: all 0.2s ease;
+}
+
+.telegramId {
+  width: 80px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.actionsLabel {
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* hover эффект */
@@ -36,6 +46,7 @@
 
 /* email */
 .email {
+  width: 225px;
   color: rgba(255, 255, 255, 0.85);
   font-size: 15px;
 }

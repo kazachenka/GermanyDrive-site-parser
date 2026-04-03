@@ -7,7 +7,7 @@ export const users = sqliteTable('users', {
 	passwordSalt: text('password_salt').notNull(),
 	createdAt: text('created_at').notNull(),
 	updatedAt: text('updated_at').notNull(),
-	telegramId: text('telegram_id'),
+	telegramId: integer('telegram_id').notNull(),
 	isAdmin: integer("is_admin", { mode: "boolean" }).notNull().default(false),
 })
 

@@ -1,0 +1,18 @@
+.content {
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-start;
+}

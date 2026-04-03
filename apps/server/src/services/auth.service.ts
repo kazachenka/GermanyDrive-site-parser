@@ -30,7 +30,7 @@ export async function registerUser(
 	payload: RegisterRequestDto
 ) {
 	const db = getDb(env)
-	const {email, password} = payload
+	const { email, password, telegramId } = payload
 
 	if (!email || !password) {
 		return {error: {message: 'email and password required', status: 400}}
@@ -38,6 +38,10 @@ export async function registerUser(
 
 	if (password.length < 8) {
 		return {error: {message: 'password must be >= 8 chars', status: 400}}
+	}
+
+	if (!telegramId) {
+		return {error: {message: 'telegramId is required', status: 400}}
 	}
 
 	const existing = await findUserByEmail(db, email)
@@ -54,6 +58,7 @@ export async function registerUser(
 		passwordSalt: salt,
 		createdAt: now,
 		updatedAt: now,
+		telegramId: telegramId,
 		isAdmin: false,
 	})
 

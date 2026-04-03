@@ -1,7 +1,7 @@
 
 import { users } from "../db/schema";
 import { eq } from "drizzle-orm";
-import { UserDto, UserPatchPassword } from "@site-parser/shared";
+import {RegisterRequestDto, UserDto, UserPatchPassword, UserPatchTelegramId} from "@site-parser/shared";
 import { hashPassword } from "../lib/crypto";
 import { getDb } from "../db";
 import type { Bindings } from "../types/app";
@@ -9,11 +9,13 @@ import type { Bindings } from "../types/app";
 export const userService = {
 	async getAllUsers(env: Bindings): Promise<UserDto[]> {
 		const db = getDb(env);
+
 		return db
 		.select({
 			id: users.id,
 			email: users.email,
 			isAdmin: users.isAdmin,
+			telegramId: users.telegramId,
 		})
 		.from(users);
 	},
@@ -54,5 +56,35 @@ export const userService = {
 		.where(eq(users.id, data.id));
 
 		return result;
+	},
+
+	async patchTelegramId(env: Bindings, data: UserPatchTelegramId ) {
+		const db = getDb(env);
+
+		const result = await db
+		.update(users)
+		.set({
+			telegramId: data.telegramId,
+			updatedAt: new Date().toISOString(),
+		})
+		.where(eq(users.id, data.id));
+
+		return result;
+	},
+
+	async deleteUser(env: Bindings, id: number) {
+		const db = getDb(env);
+		const existing = await db
+		.select({ id: users.id })
+		.from(users)
+		.where(eq(users.id, id));
+
+		if (existing.length === 0) {
+			return false;
+		}
+
+		await db.delete(users).where(eq(users.id, id));
+
+		return true;
 	},
 };

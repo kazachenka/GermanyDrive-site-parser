@@ -1,6 +1,7 @@
 export type RegisterRequestDto = {
   email: string
   password: string
+  telegramId: number
 }
 
 export type LoginRequestDto = {
@@ -19,12 +20,18 @@ export type LogoutRequestDto = {
 export type UserDto = {
   id: number
   email: string
+  telegramId: number
   isAdmin?: boolean
 }
 
 export type UserPatchPassword = {
   id: number,
   password: string,
+}
+
+export type UserPatchTelegramId = {
+  id: number,
+  telegramId: number,
 }
 
 export type AuthTokensDto = {
