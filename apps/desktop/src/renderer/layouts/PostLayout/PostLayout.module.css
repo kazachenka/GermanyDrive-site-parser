@@ -177,7 +177,6 @@
   background: rgba(255, 255, 255, 0.04);
 }
 
-/* можно повесить на выбранную карточку */
 .thumbCardSelected {
   background: rgba(99, 102, 241, 0.08);
   border-color: rgba(99, 102, 241, 0.4);

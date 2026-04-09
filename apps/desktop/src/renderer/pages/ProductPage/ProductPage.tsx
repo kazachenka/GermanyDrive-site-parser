@@ -7,7 +7,6 @@ import {useNavigate} from "react-router-dom";
 import styles from "./ProductPage.module.css";
 import {AppLoader} from "../../shared/ui/AppLoader/AppLoader.tsx";
 import AppModal from "../../shared/ui/AppModal/AppModal.tsx";
-import {styleText} from "node:util";
 
 export function sanitizeHtml(html: string): string {
   const parser = new DOMParser();

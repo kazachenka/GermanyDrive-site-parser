@@ -20,7 +20,6 @@ app.get('/health', (c) => c.json({ ok: true }))
 
 app.use('/user/*', createAuthMiddleware())
 app.use('/telegram/*', createAuthMiddleware())
-app.use('/files/*', createAuthMiddleware())
 
 app.route('/auth', authRoutes)
 app.route('/telegram', telegramRoutes)

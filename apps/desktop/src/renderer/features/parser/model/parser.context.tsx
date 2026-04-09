@@ -6,7 +6,7 @@ import {
   useReducer,
   useRef,
   type ReactNode,
-  useState, useEffect,
+  useEffect,
 } from "react";
 import {parserApi} from "../api/parser.api";
 import {normalizeParserError} from "../lib/normalize-parser-error";
@@ -16,6 +16,7 @@ import {siteParserReducer} from "./parser.reducer";
 import type {
   ParseSitePayload,
   SiteParserContextValue,
+  SiteParserState,
 } from "./parser.types";
 import { MobileDeRuPostItemType } from "@site-parser/shared"
 import {useError} from "../../error/error.context.tsx";
@@ -34,6 +35,64 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
     INITIAL_SITE_PARSER_STATE,
   );
   const { showError } = useError();
+
+  const verifyProductDataToSend = (state: SiteParserState): boolean =>{
+    if (!(state.parsedData?.title)) {
+      showError('Необходимо задать название');
+
+      return false;
+    }
+
+    if (!(state.parsedData?.price || state.price)) {
+      showError('Необходимо задать цену');
+
+      return false;
+    }
+
+    if (!(state.parsedData?.engine)) {
+      showError('Необходимо задать объем двигателя');
+
+      return false;
+    }
+
+    if (!(state.parsedData?.transmission)) {
+      showError('Необходимо задать КПП');
+
+      return false;
+    }
+
+    if (!(state.parsedData?.power)) {
+      showError('Необходимо задать мощность');
+
+      return false;
+    }
+
+    if (!(state.parsedData?.distance)) {
+      showError('Необходимо задать пробег');
+
+      return false;
+    }
+
+    if (!(state.parsedData?.fuel)) {
+      showError('Необходимо задать тип топлива');
+
+      return false;
+    }
+
+    if (!state.parsedData.url) {
+      showError('Необходимо ввести ссылку на продукт');
+
+      return false;
+    }
+
+    if (!state.selectedImageUrls.length) {
+      showError('Необходимо выбрать фото для отправки');
+
+      return false;
+    }
+
+    return true;
+  }
 
   useEffect(() => {
     if (state.error) {
@@ -136,7 +195,7 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
   }, [])
 
   const sentToTelegramInTest = async () => {
-    if (state.parsedData && state.selectedImageUrls.length) {
+    if (state.parsedData && verifyProductDataToSend(state)) {
       try {
         dispatch({
           type: PARSER_ACTIONS.SENT_TELEGRAM_TEST,
@@ -156,13 +215,11 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
           type: PARSER_ACTIONS.SENT_TELEGRAM_FINISHED,
         });
       }
-    } else {
-      showError('Необходимо выбрать фото для отправки');
     }
   }
 
   const sentToTelegramInProd = async () => {
-    if (state.parsedData && state.selectedImageUrls.length) {
+    if (state.parsedData && verifyProductDataToSend(state)) {
       try {
         dispatch({
           type: PARSER_ACTIONS.SENT_TELEGRAM_PROD,
@@ -175,6 +232,10 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
         };
 
         await parserApi.sentDataToTelegramProd(dataForSent);
+
+        dispatch({
+          type: PARSER_ACTIONS.RESET,
+        });
       } catch (error) {
         console.log(error);
       } finally {
@@ -182,8 +243,6 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
           type: PARSER_ACTIONS.SENT_TELEGRAM_FINISHED,
         });
       }
-    } else {
-      showError('Необходимо выбрать фото для отправки');
     }
   }
 

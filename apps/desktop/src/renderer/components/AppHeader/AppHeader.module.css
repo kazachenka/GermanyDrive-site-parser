@@ -23,3 +23,11 @@
 .active {
   color: #7aa2ff;
 }
+
+.logout {
+  position: absolute;
+  right: 20px;
+  color: #7aa2ff;
+  font-weight: 500;
+  cursor: pointer;
+}

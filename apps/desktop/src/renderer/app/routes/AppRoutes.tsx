@@ -7,6 +7,7 @@ import { RegisterPage } from "../../pages/RegisterPage/RegisterPage.tsx";
 import { HomePage } from "../../pages/HomePage/HomePage.tsx";
 import { ProductPage } from "../../pages/ProductPage/ProductPage.tsx";
 import { AdminPage } from "../../pages/AdminPage/AdminPage.tsx";
+import { CustomProductPage } from "../../pages/CustomProductPage/CustomProductPage.tsx";
 
 export function AppRoutes() {
   return (
@@ -49,6 +50,16 @@ export function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/custom-product"
+        element={
+          <ProtectedRoute>
+            <CustomProductPage />
+          </ProtectedRoute>
+        }
+      />
+
 
       <Route path="/" element={<Navigate to="/parser" replace />} />
       <Route path="*" element={<Navigate to="/parser" replace />} />
