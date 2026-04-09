@@ -43,7 +43,7 @@ export function AppHeader() {
           }
           onClick={reset}
         >
-          Кастомный
+          Ручная загрузка
         </NavLink>
 
         {isAdmin && (
