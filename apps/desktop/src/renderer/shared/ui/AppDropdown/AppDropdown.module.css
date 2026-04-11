@@ -1,0 +1,44 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  gap: 6px;
+  width: 100%;
+}
+
+.label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.input {
+  height: 44px;
+  padding: 0 14px;
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
+
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+
+  border-radius: var(--radius-md);
+  border: 1px solid var(--surface-border);
+
+  transition: all 0.2s ease;
+}
+
+.list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  max-height: 220px;
+  overflow-y: auto;
+
+  background: var(--bg-primary);
+  color: var(--text-primary);
+
+  border-radius: var(--radius-md);
+  border: 1px solid var(--surface-border);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(122, 141, 196, 0.7) transparent;
+}

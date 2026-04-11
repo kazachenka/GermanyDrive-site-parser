@@ -7,22 +7,14 @@ import React, {useEffect, useState} from "react";
 import {AppInput} from "../../shared/ui/AppInput/AppInput.tsx";
 import { MobileDeRuPostItemType } from "@site-parser/shared"
 import {AppLoader} from "../../shared/ui/AppLoader/AppLoader.tsx";
+import {AppDropdown} from "../../shared/ui/AppDropdown/AppDrodpown.tsx";
+import {processProductData} from "./utils.ts";
+import {defaultCustomProductState, fuelOptions, transmissionOptions} from "./constants.ts";
 
 export function CustomProductPage() {
   const { state, siteParserLoading ,setSelectedImages ,setProductPrice, setParsedData ,sentToTelegramInTest, sentToTelegramInProd } = useSiteParser();
 
-  const [stateData, setStateData] = useState<MobileDeRuPostItemType>(state.parsedData ?? {
-    url: '',
-    imageUrls: [],
-    title: '',
-    register: '',
-    engine: '',
-    transmission: '',
-    power: '',
-    distance: '',
-    fuel: '',
-    price: ''
-  });
+  const [stateData, setStateData] = useState<MobileDeRuPostItemType>(state.parsedData ?? defaultCustomProductState);
 
   useEffect(() => {
     setParsedData(stateData);
@@ -57,12 +49,17 @@ export function CustomProductPage() {
   const [isOpenModal, setOpenModal] = useState<boolean>(false);
 
   const sentToTelegramTestMode = async () => {
-    sentToTelegramInTest();
+    sentToTelegramInTest(processProductData(stateData));
   }
 
   const sentToTelegramProdMode = async () => {
-    sentToTelegramInProd();
-    setOpenModal(false);
+    try {
+      sentToTelegramInProd(processProductData(stateData));
+      setOpenModal(false);
+      setStateData(defaultCustomProductState)
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   const openConfirmSendToTelegram = async () => {
@@ -77,15 +74,16 @@ export function CustomProductPage() {
     <div className={styles.wrapper}>
       <div className={styles.productWrapper}>
         <AppInput
-          label="Название авто"
+          label="Название авто *"
           value={stateData.title}
           placeholder="Название"
           onChange={(e) => updateProductSettings({
             title: e.target.value,
           })}
         />
+
         <AppInput
-          label="Цена €"
+          label="Цена(€) *"
           type="number"
           value={stateData.price}
           placeholder="Цена"
@@ -104,7 +102,8 @@ export function CustomProductPage() {
         />
 
         <AppInput
-          label="Двигатель"
+          label="Двигатель(куб. см)"
+          type="number"
           value={stateData.engine}
           placeholder="**** куб. cм"
           onChange={(e) => updateProductSettings({
@@ -112,17 +111,19 @@ export function CustomProductPage() {
           })}
         />
 
-        <AppInput
-          label="КПП"
+        <p className={styles.label}>КПП</p>
+        <AppDropdown
+          options={transmissionOptions}
           value={stateData.transmission}
-          placeholder="КПП"
-          onChange={(e) => updateProductSettings({
-            transmission: e.target.value,
+          onChange={(transmission) => updateProductSettings({
+            transmission: transmission,
           })}
-        />
+        >
+        </AppDropdown>
 
         <AppInput
-          label="Мощность"
+          label="Мощность(л. с.)"
+          type="number"
           value={stateData.power}
           placeholder="Мощность"
           onChange={(e) => updateProductSettings({
@@ -131,7 +132,8 @@ export function CustomProductPage() {
         />
 
         <AppInput
-          label="Пробег"
+          label="Пробег(км)"
+          type="number"
           value={stateData.distance}
           placeholder="Пробег"
           onChange={(e) => updateProductSettings({
@@ -139,14 +141,15 @@ export function CustomProductPage() {
           })}
         />
 
-        <AppInput
-          label="Топливо"
+        <p className={styles.label}>Топливо</p>
+        <AppDropdown
+          options={fuelOptions}
           value={stateData.fuel}
-          placeholder="Топливо"
-          onChange={(e) => updateProductSettings({
-            fuel: e.target.value,
+          onChange={(fuel) => updateProductSettings({
+            fuel: fuel,
           })}
-        />
+        >
+        </AppDropdown>
 
         <AppInput
           label="Ссылка на продукт"

@@ -24,7 +24,6 @@ function createWindow() {
   if (process.env.ELECTRON_RENDERER_URL) {
     void mainWindow.loadURL(process.env.ELECTRON_RENDERER_URL);
   } else {
-    mainWindow.setMenu(null);
     void mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
 

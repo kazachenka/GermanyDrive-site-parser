@@ -49,42 +49,6 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
       return false;
     }
 
-    if (!(state.parsedData?.engine)) {
-      showError('Необходимо задать объем двигателя');
-
-      return false;
-    }
-
-    if (!(state.parsedData?.transmission)) {
-      showError('Необходимо задать КПП');
-
-      return false;
-    }
-
-    if (!(state.parsedData?.power)) {
-      showError('Необходимо задать мощность');
-
-      return false;
-    }
-
-    if (!(state.parsedData?.distance)) {
-      showError('Необходимо задать пробег');
-
-      return false;
-    }
-
-    if (!(state.parsedData?.fuel)) {
-      showError('Необходимо задать тип топлива');
-
-      return false;
-    }
-
-    if (!state.parsedData.url) {
-      showError('Необходимо ввести ссылку на продукт');
-
-      return false;
-    }
-
     if (!state.selectedImageUrls.length) {
       showError('Необходимо выбрать фото для отправки');
 
@@ -194,7 +158,12 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
     });
   }, [])
 
-  const sentToTelegramInTest = async () => {
+  const sentToTelegramInTest = async (data?: MobileDeRuPostItemType) => {
+    // const updatedData = {
+    //   ...state,
+    //   parsedData: data ?? state.parsedData,
+    // }
+
     if (state.parsedData && verifyProductDataToSend(state)) {
       try {
         dispatch({
@@ -218,17 +187,22 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
     }
   }
 
-  const sentToTelegramInProd = async () => {
-    if (state.parsedData && verifyProductDataToSend(state)) {
+  const sentToTelegramInProd = async (data?: MobileDeRuPostItemType) => {
+    const updatedData = {
+      ...state,
+      parsedData: data ?? state.parsedData,
+    }
+
+    if (updatedData.parsedData && verifyProductDataToSend(updatedData)) {
       try {
         dispatch({
           type: PARSER_ACTIONS.SENT_TELEGRAM_PROD,
         });
 
         const dataForSent: MobileDeRuPostItemType = {
-          ...state.parsedData,
-          imageUrls: state.selectedImageUrls,
-          price: state.price,
+          ...updatedData.parsedData,
+          imageUrls: updatedData.selectedImageUrls,
+          price: updatedData.price,
         };
 
         await parserApi.sentDataToTelegramProd(dataForSent);

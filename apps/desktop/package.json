@@ -1,7 +1,7 @@
 {
   "name": "@apps/desktop",
   "private": true,
-  "version": "1.0.18",
+  "version": "1.0.19",
   "main": "out/main/index.js",
   "scripts": {
     "dev": "electron-vite dev",

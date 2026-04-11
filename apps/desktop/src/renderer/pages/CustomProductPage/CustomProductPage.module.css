@@ -108,6 +108,12 @@
   box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.22);
 }
 
+.label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0 0 -10px;
+}
+
 .thumbs {
   display: grid;
   grid-template-columns: 1fr 1fr;

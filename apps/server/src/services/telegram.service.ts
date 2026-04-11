@@ -22,7 +22,7 @@ type PreparedTelegramPhoto = {
 }
 
 export class PrintMobileDeRuService {
-	private readonly MAX_MEDIA_CAPTION_LENGTH = 1424
+	private readonly MAX_MEDIA_CAPTION_LENGTH = 2048
 	private readonly MAX_TELEGRAM_PHOTO_BYTES = 10 * 1024 * 1024
 	private readonly images: ImagesBinding
 
@@ -135,8 +135,11 @@ export class PrintMobileDeRuService {
 		optionalLines.push('☎️ +375(29)164-99-99')
 		optionalLines.push('')
 		optionalLines.push('*GermanyDrive не является продавцом транспортного средства. Транспортное средство приобретается покупателем у третьего лица на территории иностранного государства.')
-		optionalLines.push('')
-		optionalLines.push(linkLine)
+
+		if (safeUrl && safeUrl.includes('mobile.de')) {
+			optionalLines.push('')
+			optionalLines.push(linkLine)
+		}
 
 		return this.joinAndFitHtmlLines(
 			requiredLines,

@@ -25,6 +25,6 @@ export interface SiteParserContextValue {
   setParsedData: (data: MobileDeRuPostItemType | null) => void;
   setSelectedImages: (data: string[]) => void;
   siteParserLoading: boolean;
-  sentToTelegramInTest: () => void,
-  sentToTelegramInProd: () => void,
+  sentToTelegramInTest: (data?: MobileDeRuPostItemType) => void,
+  sentToTelegramInProd: (data?: MobileDeRuPostItemType) => void,
 }
