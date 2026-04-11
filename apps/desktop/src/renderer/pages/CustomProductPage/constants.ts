@@ -51,7 +51,7 @@ export const fuelOptions: DropdownOption<string>[]  = [
     value: 'Электричество'
   },
   {
-    label: 'Гибридное',
-    value: 'Гибридное'
+    label: 'Гибрид (бензин/электричество)',
+    value: 'Гибрид (бензин/электричество)'
   },
 ]
