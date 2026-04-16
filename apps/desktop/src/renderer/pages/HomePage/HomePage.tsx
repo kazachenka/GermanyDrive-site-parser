@@ -42,7 +42,6 @@ export function HomePage() {
       }
     } catch (error) {
       console.log(error);
-
     } finally {
       setLoading(false);
     }
