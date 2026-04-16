@@ -42,8 +42,6 @@ export function HomePage() {
       }
     } catch (error) {
       console.log(error);
-
-      showError('Что то пошло не так');
     } finally {
       setLoading(false);
     }
