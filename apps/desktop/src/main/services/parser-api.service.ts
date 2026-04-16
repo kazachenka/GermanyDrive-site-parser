@@ -1,4 +1,4 @@
-import { MobileDeRuPostItemType } from "@site-parser/shared"
+import { ProductPostItemType } from "@site-parser/shared"
 import {mainApiFetch} from "./utils/fetch.utils";
 
 export async function getHtmlByUrl(
@@ -16,7 +16,7 @@ export async function getHtmlByUrl(
 }
 
 export async function sentToTelegramInTestMode (
-  data: MobileDeRuPostItemType
+  data: ProductPostItemType
 ): Promise<void> {
   await mainApiFetch<void>("/telegram/sent-to-test", {
     method: "POST",
@@ -25,7 +25,7 @@ export async function sentToTelegramInTestMode (
 }
 
 export async function sentToTelegramInProdMode (
-  data: MobileDeRuPostItemType
+  data: ProductPostItemType
 ): Promise<void> {
   await mainApiFetch<void>("/telegram/sent-to-prod", {
     method: "POST",

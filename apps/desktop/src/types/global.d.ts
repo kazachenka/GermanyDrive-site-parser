@@ -16,8 +16,8 @@ declare global {
 
     parse: {
       getHtmlByUrlForParse(siteUrl: string): Promise<string>
-      sentToTelegramTest(data: import('@site-parser/shared').MobileDeRuPostItemType): Promise<void>
-      sentToTelegramProd(data: import('@site-parser/shared').MobileDeRuPostItemType): Promise<void>
+      sentToTelegramTest(data: import('@site-parser/shared').ProductPostItemType): Promise<void>
+      sentToTelegramProd(data: import('@site-parser/shared').ProductPostItemType): Promise<void>
     }
 
     user: {

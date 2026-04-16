@@ -1,6 +1,6 @@
 import { SiteParserState } from "./parser.types";
 import { PARSER_ACTIONS } from "./parser.constants.ts";
-import { MobileDeRuPostItemType } from "@site-parser/shared"
+import { ProductPostItemType } from "@site-parser/shared"
 
 type SiteParserAction =
   | { type: typeof PARSER_ACTIONS.PARSE_START; payload: { url: string } }
@@ -12,7 +12,7 @@ type SiteParserAction =
   };
 }
   | { type: typeof PARSER_ACTIONS.PARSE_ERROR; payload: { error: string } }
-  | { type: typeof PARSER_ACTIONS.SET_PARSED_DATA; payload: { parsedData: MobileDeRuPostItemType | null } }
+  | { type: typeof PARSER_ACTIONS.SET_PARSED_DATA; payload: { parsedData: ProductPostItemType | null } }
   | { type: typeof PARSER_ACTIONS.RESET }
   | { type: typeof PARSER_ACTIONS.SET_SELECTED_IMAGE_URLS, payload: { selectedImageUrls: string[] } }
   | { type: typeof PARSER_ACTIONS.SET_PRICE, payload: { price: string } }

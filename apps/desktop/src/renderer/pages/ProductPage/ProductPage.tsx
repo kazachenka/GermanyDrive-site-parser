@@ -1,12 +1,12 @@
 import {useSiteParser} from "../../features/parser/model/parser.context.tsx";
 import {useEffect, useMemo, useRef, useState} from "react";
-import {getMobileDePageData} from "../../features/parser/lib/parser.utils.ts";
 import {AppButton} from "../../shared/ui/AppButton/AppButton.tsx";
 import {PostLayout} from "../../layouts/PostLayout/PostLayout.tsx";
 import {useNavigate} from "react-router-dom";
 import styles from "./ProductPage.module.css";
 import {AppLoader} from "../../shared/ui/AppLoader/AppLoader.tsx";
 import AppModal from "../../shared/ui/AppModal/AppModal.tsx";
+import { getParserByUrl } from "../../features/parser/lib/parser.utils.ts";
 
 export function sanitizeHtml(html: string): string {
   const parser = new DOMParser();
@@ -54,7 +54,13 @@ export function ProductPage() {
     if (!hiddenRef.current) return;
     if (!sanitizedHtml) return;
 
-    const result = getMobileDePageData(String(state.url));
+    const parserFunction = getParserByUrl(String(state.url));
+
+    if (!parserFunction) {
+      return;
+    }
+
+    const result = parserFunction(String(state.url));
 
     setParsedData(result);
 

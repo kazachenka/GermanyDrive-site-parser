@@ -1,7 +1,7 @@
-import { MobileDeRuPostItemType } from "@site-parser/shared"
+import { ProductPostItemType } from "@site-parser/shared"
 import {DropdownOption} from "../../shared/ui/AppDropdown/AppDrodpown.tsx";
 
-export const defaultCustomProductState: MobileDeRuPostItemType  = {
+export const defaultCustomProductState: ProductPostItemType  = {
   url: '',
   imageUrls: [],
   title: '',

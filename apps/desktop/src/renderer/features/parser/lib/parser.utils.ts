@@ -1,58 +1,36 @@
-import { MobileDeRuPostItemType } from "@site-parser/shared"
+import { getMobileDePageData } from "./parser-mobie-de-ru.ts";
+import { getAutoscoutPageData } from "./parser.autoscout-ru.ts";
+import { ProductPostItemType, SITE_LINK, SITE_TYPE, SiteLink, SiteType } from "@site-parser/shared"
+
+const SITE_CONFIG = {
+  [SITE_TYPE.MOBILE_DE_RU]: {
+    link: SITE_LINK[SITE_TYPE.MOBILE_DE_RU],
+    parser: getMobileDePageData,
+  },
+  [SITE_TYPE.AUTOSCOUT_RU]: {
+    link: SITE_LINK[SITE_TYPE.AUTOSCOUT_RU],
+    parser: getAutoscoutPageData,
+  },
+} satisfies Record<
+  SiteType,
+  {
+    link: SiteLink,
+    parser: (url: string | undefined) => ProductPostItemType | null
+  }
+>;
 
 export const isString = (elem: unknown): boolean => typeof elem === 'string';
+
 export const removeEmptySymbols = (str: string) => {
   if (!isString(str)) return str;
 
   return str.replace(/&nbsp;|\u00A0/g, '');
 }
 
-export function getMobileDePageData(url = ''): MobileDeRuPostItemType | null {
-  const container = document.querySelector('[class^="ViewItemPage_content"]');
+export const getParserByUrl = (url: string) => {
+  const entry = Object.values(SITE_CONFIG).find(config =>
+    url.includes(config.link)
+  );
 
-  if (!container) {
-    return null;
-  }
-  const imageGallery = document.querySelector('[class^="InlineView_galleryContainer"]');
-  const imageElements = imageGallery?.querySelectorAll('[class^="clickable_Clickable"] img');
-  //const nettoElement = this._document.querySelector('[class^="MainPriceArea_mainPrice"]');
-  const bruttoElement = document.querySelector('[class^="MainPriceArea_mainPrice"]');
-  const desc = document.querySelector('[data-testid=vip-key-features-box]');
-  // const desc2 = this._document.querySelector('.further-tec-data');
-
-  const imageUrls: string[] = [];
-
-  imageElements?.forEach((elem) => {
-    const url = elem.getAttribute('src');
-    if (isString(url) && url.includes('https://')) {
-      imageUrls.push(url)
-    }
-  })
-
-  return {
-    url: url,
-    imageUrls: imageUrls,
-    title: container.querySelector('h2[class^=typography_headline]')?.textContent || '',
-    // price: (nettoElement?.textContent || bruttoElement?.textContent)?.split(' ')[0] || '' as string,
-    price: removeEmptySymbols(bruttoElement?.textContent || "").split('€')[0] || '' as string,
-    distance: desc?.querySelector('[data-testid=vip-key-features-list-item-mileage] [class^=KeyFeatures_value]')?.textContent || '',
-    transmission: desc?.querySelector('[data-testid=vip-key-features-list-item-transmission] [class^=KeyFeatures_value]')?.textContent || '',
-    power: desc?.querySelector('[data-testid=vip-key-features-list-item-power] [class^=KeyFeatures_value]')?.textContent || '',
-    register: desc?.querySelector('[data-testid=vip-key-features-list-item-firstRegistration] [class^=KeyFeatures_value]')?.textContent || '',
-    fuel: desc?.querySelector('[data-testid=vip-key-features-list-item-fuel] [class^=KeyFeatures_value]')?.textContent || '',
-    engine: getEngineFromElementList(document.querySelector('[class^="DataList_alternatingColorsList"]')),
-  }
-}
-
-function getEngineFromElementList(container: HTMLDivElement): string {
-  const labels = container.querySelectorAll('[class^=typography_label]');
-  const values = container.querySelectorAll('[class^=DataListItem]');
-
-  const index = [...labels].findIndex((el) => ((el?.textContent?.toLowerCase() || '') === 'объем двигателя'));
-
-  if (index > -1) {
-    return values[index]?.textContent?.replace('ccm', 'куб. см');
-  }
-
-  return '0';
-}
+  return entry?.parser;
+};

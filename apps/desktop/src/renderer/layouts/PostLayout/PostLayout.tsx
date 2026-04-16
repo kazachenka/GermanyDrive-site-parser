@@ -1,9 +1,9 @@
 import React, {useEffect, useMemo, useState} from "react";
-import { MobileDeRuPostItemType } from "@site-parser/shared";
+import { ProductPostItemType } from "@site-parser/shared";
 import styles from "./PostLayout.module.css";
 
 type Props = {
-  item: MobileDeRuPostItemType;
+  item: ProductPostItemType;
   onSelectedImagesChange?: (selectedImages: string[]) => void;
 };
 

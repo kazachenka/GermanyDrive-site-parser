@@ -7,14 +7,15 @@ import {useSiteParser} from "../../features/parser/model/parser.context.tsx";
 import styles from "./HomePage.module.css";
 import {AppLoader} from "../../shared/ui/AppLoader/AppLoader.tsx";
 import {useError} from "../../features/error/error.context.tsx";
+import { getParserByUrl } from "../../features/parser/lib/parser.utils.ts";
 
 export function HomePage() {
   const navigate = useNavigate();
   const { parseSite, setProductPrice } = useSiteParser();
   const { isLoadingAuth } = useAuth();
-  const [loading, setLoading] = useState(false);
   const { showError } = useError()
 
+  const [loading, setLoading] = useState(false);
   const [siteUrl, setSiteUrl] = useState("");
   const [price, setPrice] = useState("");
 
@@ -23,7 +24,15 @@ export function HomePage() {
       setLoading(true);
 
       if (siteUrl && price) {
-        await parseSite({url: siteUrl});
+        const parserFunction = getParserByUrl(String(siteUrl));
+
+        if (!parserFunction) {
+          showError('Данная ссылка не поддерживается.');
+
+          return;
+        }
+
+        await parseSite({ url: siteUrl });
 
         setProductPrice(price);
 
@@ -54,7 +63,7 @@ export function HomePage() {
             label="Site Url"
             type="text"
             value={siteUrl}
-            placeholder="https://www.mobile.de/ru/"
+            placeholder="https://link"
             onChange={(e) => setSiteUrl(e.target.value)}
           />
 

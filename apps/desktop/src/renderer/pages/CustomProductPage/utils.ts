@@ -1,6 +1,6 @@
-import { MobileDeRuPostItemType } from "@site-parser/shared"
+import { ProductPostItemType } from "@site-parser/shared"
 
-export function processProductData(data: MobileDeRuPostItemType): MobileDeRuPostItemType {
+export function processProductData(data: ProductPostItemType): ProductPostItemType {
   return {
     ...data,
     distance: processDistance(data.distance),

@@ -18,7 +18,7 @@ import type {
   SiteParserContextValue,
   SiteParserState,
 } from "./parser.types";
-import { MobileDeRuPostItemType } from "@site-parser/shared"
+import { ProductPostItemType } from "@site-parser/shared"
 import {useError} from "../../error/error.context.tsx";
 
 const SiteParserContext = createContext<SiteParserContextValue | undefined>(
@@ -137,7 +137,7 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
     dispatch({type: PARSER_ACTIONS.RESET});
   }, []);
 
-  const setParsedData = useCallback((data: MobileDeRuPostItemType | null) => {
+  const setParsedData = useCallback((data: ProductPostItemType | null) => {
     dispatch({
       type: PARSER_ACTIONS.SET_PARSED_DATA,
       payload: {parsedData: data},
@@ -158,7 +158,7 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
     });
   }, [])
 
-  const sentToTelegramInTest = async (data?: MobileDeRuPostItemType) => {
+  const sentToTelegramInTest = async (data?: ProductPostItemType) => {
     const updatedData = {
       ...state,
       parsedData: data ?? state.parsedData,
@@ -170,7 +170,7 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
           type: PARSER_ACTIONS.SENT_TELEGRAM_TEST,
         });
 
-        const dataForSent: MobileDeRuPostItemType = {
+        const dataForSent: ProductPostItemType = {
           ...updatedData.parsedData,
           imageUrls: updatedData.selectedImageUrls,
           price: updatedData.price,
@@ -187,7 +187,7 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
     }
   }
 
-  const sentToTelegramInProd = async (data?: MobileDeRuPostItemType) => {
+  const sentToTelegramInProd = async (data?: ProductPostItemType) => {
     const updatedData = {
       ...state,
       parsedData: data ?? state.parsedData,
@@ -199,7 +199,7 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
           type: PARSER_ACTIONS.SENT_TELEGRAM_PROD,
         });
 
-        const dataForSent: MobileDeRuPostItemType = {
+        const dataForSent: ProductPostItemType = {
           ...updatedData.parsedData,
           imageUrls: updatedData.selectedImageUrls,
           price: updatedData.price,

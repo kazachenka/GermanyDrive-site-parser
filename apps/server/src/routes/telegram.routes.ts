@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import { AppContext } from '../types/app'
-import { MobileDeRuPostItemType } from "@site-parser/shared"
+import { ProductPostItemType } from "@site-parser/shared"
 import { PrintMobileDeRuService } from "../services/telegram.service";
 import { findUserByEmail } from "../repositories/user.resitory";
 import { getDb } from "../db";
@@ -10,7 +10,7 @@ const telegramRoutes = new Hono<AppContext>()
 telegramRoutes.post('/sent-to-test', async (c) => {
 	try {
 		const db = getDb(c.env);
-		const body = await c.req.json<MobileDeRuPostItemType>()
+		const body = await c.req.json<ProductPostItemType>()
 		const userData = c.get('user');
 		const user = await findUserByEmail(db, userData.email);
 
@@ -34,7 +34,7 @@ telegramRoutes.post('/sent-to-test', async (c) => {
 
 telegramRoutes.post('/sent-to-prod', async (c) => {
 	try {
-		const body = await c.req.json<MobileDeRuPostItemType>()
+		const body = await c.req.json<ProductPostItemType>()
 		const printMobileDeRuService = new PrintMobileDeRuService(
 			c.env.TELEGRAM_BOT_TOKEN,
 			c.env.IMAGES,

@@ -1,11 +1,11 @@
 export type SiteParserStatus = "idle" | "loading" | "success" | "error";
-import { MobileDeRuPostItemType } from "@site-parser/shared"
+import { ProductPostItemType } from "@site-parser/shared"
 
 export interface SiteParserState {
   status: SiteParserStatus;
   url: string | null;
   html: string | null;
-  parsedData: MobileDeRuPostItemType | null;
+  parsedData: ProductPostItemType | null;
   selectedImageUrls: string[];
   siteParserLoading: boolean;
   price: string;
@@ -22,9 +22,9 @@ export interface SiteParserContextValue {
   parseSite: (payload: ParseSitePayload) => Promise<void>;
   setProductPrice: (price: string) => void;
   reset: () => void;
-  setParsedData: (data: MobileDeRuPostItemType | null) => void;
+  setParsedData: (data: ProductPostItemType | null) => void;
   setSelectedImages: (data: string[]) => void;
   siteParserLoading: boolean;
-  sentToTelegramInTest: (data?: MobileDeRuPostItemType) => void,
-  sentToTelegramInProd: (data?: MobileDeRuPostItemType) => void,
+  sentToTelegramInTest: (data?: ProductPostItemType) => void,
+  sentToTelegramInProd: (data?: ProductPostItemType) => void,
 }

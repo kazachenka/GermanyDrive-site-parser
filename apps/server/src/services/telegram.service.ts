@@ -1,5 +1,5 @@
-import { MobileDeRuPostItemType } from '@site-parser/shared'
-import { R2ImageService } from './r2-image.service'
+import { ProductPostItemType } from '@site-parser/shared'
+import {PRINT_TELEGRAM_LABEL} from "../constants";
 
 const STYLED_NUMBERS: Record<number, string> = {
 	0: '0️⃣',
@@ -95,7 +95,7 @@ export class PrintMobileDeRuService {
 	}
 
 	private buildCaption(
-		auto: MobileDeRuPostItemType,
+		auto: ProductPostItemType,
 		styledPrice: string,
 		price: number,
 		text?: string,
@@ -105,7 +105,6 @@ export class PrintMobileDeRuService {
 		const safeText = text ? this.escapeHtml(text) : ''
 
 		const titleLine = `<b><a href="${safeUrl}">${safeTitle}</a></b>`
-		const linkLine = `<b><a href="${safeUrl}">Открыть на mobile.de</a></b>`
 
 		const requiredLines: string[] = [titleLine, '']
 		const optionalLines: string[] = []
@@ -136,9 +135,15 @@ export class PrintMobileDeRuService {
 		optionalLines.push('')
 		optionalLines.push('*GermanyDrive не является продавцом транспортного средства. Транспортное средство приобретается покупателем у третьего лица на территории иностранного государства.')
 
-		if (safeUrl && safeUrl.includes('mobile.de')) {
-			optionalLines.push('')
-			optionalLines.push(linkLine)
+		if (safeUrl) {
+			const linkLabel = this.getLinkLabel(safeUrl)
+
+			if (linkLabel) {
+				const linkLine = `<b><a href="${safeUrl}">Открыть на ${linkLabel}</a></b>`;
+
+				optionalLines.push('')
+				optionalLines.push(linkLine)
+			}
 		}
 
 		return this.joinAndFitHtmlLines(
@@ -238,9 +243,15 @@ export class PrintMobileDeRuService {
 		return validPhotos
 	}
 
+	private getLinkLabel(url: string): string | undefined {
+		return Object.values(PRINT_TELEGRAM_LABEL).find(siteLink =>
+			url.includes(siteLink)
+		);
+	}
+
 	public async printItemToTgGroup(
 		chatId: number | string,
-		auto: MobileDeRuPostItemType,
+		auto: ProductPostItemType,
 		text?: string,
 	): Promise<void> {
 		try {

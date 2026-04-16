@@ -5,7 +5,7 @@ import {AppButton} from "../../shared/ui/AppButton/AppButton.tsx";
 import AppModal from "../../shared/ui/AppModal/AppModal.tsx";
 import React, {useEffect, useState} from "react";
 import {AppInput} from "../../shared/ui/AppInput/AppInput.tsx";
-import { MobileDeRuPostItemType } from "@site-parser/shared"
+import { ProductPostItemType } from "@site-parser/shared"
 import {AppLoader} from "../../shared/ui/AppLoader/AppLoader.tsx";
 import {AppDropdown} from "../../shared/ui/AppDropdown/AppDrodpown.tsx";
 import {processProductData} from "./utils.ts";
@@ -14,7 +14,7 @@ import {defaultCustomProductState, fuelOptions, transmissionOptions} from "./con
 export function CustomProductPage() {
   const { state, siteParserLoading ,setSelectedImages ,setProductPrice, setParsedData ,sentToTelegramInTest, sentToTelegramInProd } = useSiteParser();
 
-  const [stateData, setStateData] = useState<MobileDeRuPostItemType>(state.parsedData ?? defaultCustomProductState);
+  const [stateData, setStateData] = useState<ProductPostItemType>(state.parsedData ?? defaultCustomProductState);
 
   useEffect(() => {
     setParsedData(stateData);
@@ -33,7 +33,7 @@ export function CustomProductPage() {
       return setSelectedImages([...state.selectedImageUrls, imageUrl]);
   };
 
-  const updateProductSettings = (data: Partial<MobileDeRuPostItemType>) => {
+  const updateProductSettings = (data: Partial<ProductPostItemType>) => {
     setStateData({
       ...stateData,
       ...data,
