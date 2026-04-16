@@ -1,13 +1,14 @@
-import {useNavigate} from "react-router-dom";
-import {useAuth} from "../../features/auth/model/auth.context";
-import {AppButton} from "../../shared/ui/AppButton/AppButton";
-import {AppInput} from "../../shared/ui/AppInput/AppInput.tsx";
-import {useState} from "react";
-import {useSiteParser} from "../../features/parser/model/parser.context.tsx";
-import styles from "./HomePage.module.css";
-import {AppLoader} from "../../shared/ui/AppLoader/AppLoader.tsx";
-import {useError} from "../../features/error/error.context.tsx";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../features/auth/model/auth.context";
+import { AppButton } from "../../shared/ui/AppButton/AppButton";
+import { AppInput } from "../../shared/ui/AppInput/AppInput.tsx";
+import { useState } from "react";
+import { useSiteParser } from "../../features/parser/model/parser.context.tsx";
+import { AppLoader } from "../../shared/ui/AppLoader/AppLoader.tsx";
+import { useError } from "../../features/error/error.context.tsx";
 import { getParserByUrl } from "../../features/parser/lib/parser.utils.ts";
+
+import styles from "./HomePage.module.css";
 
 export function HomePage() {
   const navigate = useNavigate();
