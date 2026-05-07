@@ -26,7 +26,7 @@ export function getMobileDePageData(url = ''): ProductPostItemType | null {
   return {
     url: url,
     imageUrls: imageUrls,
-    title: container.querySelector('h2[class^=typography_headline]')?.textContent || '',
+    title: container.querySelector('h2[class*="MainCtaBox_title"]')?.textContent || '',
     // price: (nettoElement?.textContent || bruttoElement?.textContent)?.split(' ')[0] || '' as string,
     price: removeEmptySymbols(bruttoElement?.textContent || "").split('€')[0] || '' as string,
     distance: desc?.querySelector('[data-testid=vip-key-features-list-item-mileage] [class^=KeyFeatures_value]')?.textContent || '',
