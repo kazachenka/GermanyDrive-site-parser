@@ -1,6 +1,12 @@
 import { isString, removeEmptySymbols } from "./parser.utils.ts";
 import { ProductPostItemType } from "@site-parser/shared"
 
+function getOriginalImageUrl(url: string): string {
+  const match = url.match(/^(.*?\.jpg)/);
+
+  return match ? match[1] : url;
+}
+
 export function getAutoscoutPageData(url = ''): ProductPostItemType | null {
   const container = document.querySelector('[class^="DetailPage_detailpage"] [data-cy=stage-section]');
 
@@ -15,8 +21,9 @@ export function getAutoscoutPageData(url = ''): ProductPostItemType | null {
 
   imageElements?.forEach((elem) => {
     const url = elem.getAttribute('src');
+
     if (isString(url) && url.includes('https://')) {
-      imageUrls.push(url)
+      imageUrls.push(getOriginalImageUrl(url))
     }
   });
 
@@ -86,5 +93,5 @@ function getEngineFromElementList(): string {
     return values[index]?.textContent?.replace('см³', 'куб. см');
   }
 
-  return '0';
+  return '-';
 }
