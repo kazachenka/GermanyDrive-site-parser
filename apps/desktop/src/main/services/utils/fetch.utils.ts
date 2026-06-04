@@ -1,47 +1,80 @@
-import {sessionService} from "../session.service";
+import { sessionService } from "../session.service";
 
 const API_URL = process.env.VITE_API_URL;
 
+export class ApiError extends Error {
+  constructor(
+    public status: number,
+    message: string
+  ) {
+    super(message);
+  }
+}
+
 export async function mainApiFetch<T>(
   path: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  retryOn401 = true
 ): Promise<T> {
-  const headers = new Headers(options.headers);
-  const token = sessionService.getAccessToken();
+  try {
+    const token =
+      sessionService.getAccessToken();
 
-  if (!(options.body instanceof FormData)) {
-    headers.set("Content-Type", "application/json");
-  }
+    const headers = new Headers(
+      options.headers
+    );
 
-  if (token) {
-    headers.set("Authorization", `Bearer ${token}`);
-  }
+    if (token) {
+      headers.set(
+        "Authorization",
+        `Bearer ${token}`
+      );
+    }
 
-  const response = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers,
-  });
+    const response = await fetch(
+      `${API_URL}${path}`,
+      {
+        ...options,
+        headers,
+      }
+    );
 
-  if (!response.ok) {
-    let message = "Request failed";
+    const data = await response.json();
 
-    try {
-      const data = await response.json();
-      message = data.message ?? data.error ?? message;
-    } catch {
-      try {
-        message = await response.text();
-      } catch {
-        message = "Request failed";
+    if (!response.ok) {
+      throw new ApiError(
+        response.status,
+        data?.message ??
+        "Request failed"
+      );
+    }
+
+    return data;
+  } catch (error) {
+    const isUnauthorized =
+      error instanceof ApiError &&
+      error.status === 401;
+
+    const isRefreshRequest =
+      path === "/auth/refresh";
+
+    if (
+      isUnauthorized &&
+      retryOn401 &&
+      !isRefreshRequest
+    ) {
+      const refreshed =
+        await sessionService.refreshOnce();
+
+      if (refreshed) {
+        return mainApiFetch(
+          path,
+          options,
+          false
+        );
       }
     }
 
-    throw new Error(message || "Request failed");
+    throw error;
   }
-
-  if (response.status === 204) {
-    return undefined as T;
-  }
-
-  return response.json() as Promise<T>;
 }

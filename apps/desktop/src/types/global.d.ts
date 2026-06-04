@@ -12,6 +12,7 @@ declare global {
       clearSession(): Promise<boolean>
       refreshSession(): Promise<boolean>
       logout(): Promise<boolean>
+      onForceLogout: (callback: () => void) => () => void;
     }
 
     parse: {

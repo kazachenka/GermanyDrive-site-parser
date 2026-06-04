@@ -62,4 +62,12 @@ export function registerAuthIpcHandlers() {
 
     return true;
   });
+
+  ipcMain.handle("auth:remove-session", async (event) => {
+    await sessionService.clearSession();
+
+    event.sender.send("auth:force-logout");
+
+    return true;
+  });
 }

@@ -1,7 +1,8 @@
-import {Navigate, Outlet, Route, Routes} from "react-router-dom";
+import { Navigate, Outlet, Route, Routes, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+
 import { GuestRoute } from "../../shared/router/GuestRoute.tsx";
 import { ProtectedRoute } from "../../shared/router/ProtectedRoute.tsx";
-
 import { LoginPage } from "../../pages/LoginPage/LoginPage.tsx";
 import { RegisterPage } from "../../pages/RegisterPage/RegisterPage.tsx";
 import { HomePage } from "../../pages/HomePage/HomePage.tsx";
@@ -10,6 +11,18 @@ import { AdminPage } from "../../pages/AdminPage/AdminPage.tsx";
 import { CustomProductPage } from "../../pages/CustomProductPage/CustomProductPage.tsx";
 
 export function AppRoutes() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+     const unsubscribe = window.auth.onForceLogout(() => {
+      navigate("/login", { replace: true });
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [navigate]);
+
   return (
     <Routes>
       <Route

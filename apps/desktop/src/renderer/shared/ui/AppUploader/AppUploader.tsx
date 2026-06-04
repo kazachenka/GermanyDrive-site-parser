@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from "./AppUploader.module.css"
 
+let refreshPromise: Promise<boolean> | null = null;
 type Props = { onUpload: (images: string[]) => void }
 
 export const AppUploader = ({ onUpload }: Props) => {
@@ -58,26 +59,62 @@ export const AppUploader = ({ onUpload }: Props) => {
 
 async function mainApiFetch<T>(
   path: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
+  retryOn401 = true
 ): Promise<T> {
-  const headers = new Headers(options.headers);
   const API_URL = import.meta.env.VITE_API_URL;
 
-  if (!(options.body instanceof FormData)) {
-    headers.set("Content-Type", "application/json");
-  }
+  const executeRequest = async () => {
+    const headers = new Headers(options.headers);
 
-  const response = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers,
-  });
+    if (!(options.body instanceof FormData)) {
+      headers.set("Content-Type", "application/json");
+    }
+
+    const token = await window.auth.getAccessToken();
+
+    if (token) {
+      headers.set(
+        "Authorization",
+        `Bearer ${token}`
+      );
+    }
+
+    return fetch(`${API_URL}${path}`, {
+      ...options,
+      headers,
+    });
+  };
+
+  let response = await executeRequest();
+
+  if (
+    response.status === 401 &&
+    retryOn401
+  ) {
+    if (!refreshPromise) {
+      refreshPromise = window.auth.refreshSession()
+      .finally(() => {
+        refreshPromise = null;
+      });
+    }
+
+    const refreshed = await refreshPromise;
+
+    if (refreshed) {
+      response = await executeRequest();
+    }
+  }
 
   if (!response.ok) {
     let message = "Request failed";
 
     try {
       const data = await response.json();
-      message = data.message ?? data.error ?? message;
+      message =
+        data.message ??
+        data.error ??
+        message;
     } catch {
       try {
         message = await response.text();
@@ -86,7 +123,7 @@ async function mainApiFetch<T>(
       }
     }
 
-    throw new Error(message || "Request failed");
+    throw new Error(message);
   }
 
   if (response.status === 204) {

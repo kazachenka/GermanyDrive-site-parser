@@ -20,6 +20,13 @@ contextBridge.exposeInMainWorld("auth", {
     ipcRenderer.invoke("auth:refresh-session"),
 
   logout: (): Promise<boolean> => ipcRenderer.invoke("auth:logout"),
+
+  onForceLogout: (callback: () => void) => {
+    const listener = () => callback();
+    ipcRenderer.on("auth:force-logout", listener);
+
+    return () => ipcRenderer.removeListener("auth:force-logout", listener);
+  },
 });
 
 

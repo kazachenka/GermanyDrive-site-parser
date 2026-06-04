@@ -40,6 +40,16 @@
       }
     }, [state.error]);
 
+    useEffect(() => {
+      const unsubscribe = window.auth.onForceLogout(() => {
+        dispatch({ type: AUTH_ACTIONS.LOGOUT_SUCCESS });
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }, []);
+
     const login = useCallback(async (payload: LoginPayload) => {
       dispatch({type: AUTH_ACTIONS.AUTH_REQUEST});
 
