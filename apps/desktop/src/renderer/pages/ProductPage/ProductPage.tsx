@@ -60,7 +60,7 @@ export function ProductPage() {
       return;
     }
 
-    const result = parserFunction(String(state.url));
+    const result = parserFunction(hiddenRef.current, String(state.url));
 
     setParsedData(result);
 

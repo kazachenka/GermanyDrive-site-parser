@@ -31,6 +31,17 @@ export async function getHtmlByUrl(
   return await res.text()
 }
 
+export async function getHtmlByUrlFromWorker (
+  url: string
+): Promise<any> {
+  return await mainApiFetch<void>("/fetch/fetch-html", {
+    method: "POST",
+    body: JSON.stringify({
+      url: url,
+    }),
+  });
+}
+
 export async function sentToTelegramInTestMode (
   data: ProductPostItemType
 ): Promise<void> {

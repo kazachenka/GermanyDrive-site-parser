@@ -1,3 +1,5 @@
+import {getHtmlByUrlFromWorker} from "../main/services/parser-api.service";
+
 export {}
 
 declare global {
@@ -17,6 +19,7 @@ declare global {
 
     parse: {
       getHtmlByUrlForParse(siteUrl: string): Promise<string>
+      getHtmlByUrlFromWorker(siteUrl: string): Promise<string>
       sentToTelegramTest(data: import('@site-parser/shared').ProductPostItemType): Promise<void>
       sentToTelegramProd(data: import('@site-parser/shared').ProductPostItemType): Promise<void>
     }

@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useSiteParser } from "../../features/parser/model/parser.context.tsx";
 import { AppLoader } from "../../shared/ui/AppLoader/AppLoader.tsx";
 import { useError } from "../../features/error/error.context.tsx";
-import { getParserByUrl } from "../../features/parser/lib/parser.utils.ts";
+import { getParserByUrl, isNeedVpnForSiteParser } from "../../features/parser/lib/parser.utils.ts";
 
 import styles from "./HomePage.module.css";
 
@@ -33,7 +33,7 @@ export function HomePage() {
           return;
         }
 
-        await parseSite({ url: siteUrl });
+        await parseSite({ url: siteUrl, needVpn: isNeedVpnForSiteParser(String(siteUrl)) });
 
         setProductPrice(price);
 

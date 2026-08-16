@@ -67,7 +67,7 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
   const requestIdRef = useRef(0);
 
   const parseSite = useCallback(
-    async ({url, force = false}: ParseSitePayload) => {
+    async ({url, force = false, needVpn = false}: ParseSitePayload) => {
       const trimmedUrl = url.trim();
 
       if (!trimmedUrl) {
@@ -103,7 +103,7 @@ export function SiteParserProvider({ children }: SiteParserProviderProps): JSX.E
       });
 
       try {
-        const result = await parserApi.getSiteByUrl(trimmedUrl);
+        const result = await parserApi.getSiteByUrl(trimmedUrl, needVpn);
 
         if (requestId !== requestIdRef.current) {
           return;

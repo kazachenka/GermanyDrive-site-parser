@@ -14,6 +14,7 @@ export interface SiteParserState {
 
 export interface ParseSitePayload {
   url: string;
+  needVpn: boolean;
   force?: boolean;
 }
 

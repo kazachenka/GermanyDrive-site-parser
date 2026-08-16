@@ -6,16 +6,19 @@ const SITE_CONFIG = {
   [SITE_TYPE.MOBILE_DE_RU]: {
     link: SITE_LINK[SITE_TYPE.MOBILE_DE_RU],
     parser: getMobileDePageData,
+    needVpn: true,
   },
   [SITE_TYPE.AUTOSCOUT_RU]: {
     link: SITE_LINK[SITE_TYPE.AUTOSCOUT_RU],
     parser: getAutoscoutPageData,
+    needVpn: false,
   },
 } satisfies Record<
   SiteType,
   {
     link: SiteLink,
-    parser: (url: string | undefined) => ProductPostItemType | null
+    parser: (rootElement: HTMLElement | null, url: string | undefined) => ProductPostItemType | null,
+    needVpn: boolean,
   }
 >;
 
@@ -33,4 +36,12 @@ export const getParserByUrl = (url: string) => {
   );
 
   return entry?.parser;
+};
+
+export const isNeedVpnForSiteParser = (url: string): boolean => {
+  const entry = Object.values(SITE_CONFIG).find(config =>
+    url.includes(config.link)
+  );
+
+  return entry!.needVpn;
 };

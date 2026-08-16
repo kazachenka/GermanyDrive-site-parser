@@ -13,6 +13,7 @@ export type Bindings = {
 	TELEGRAM_BOT_TOKEN: string
 	TELEGRAM_CHAT_ID: string
 	R2_PUBLIC_URL: string
+	SCRAPER_API_KEY: string
 }
 
 export type UserContext = {

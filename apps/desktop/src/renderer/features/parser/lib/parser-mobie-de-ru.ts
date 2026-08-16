@@ -1,8 +1,16 @@
 import { isString, removeEmptySymbols } from "./parser.utils.ts";
 import { ProductPostItemType } from "@site-parser/shared"
 
-export function getMobileDePageData(url = ''): ProductPostItemType | null {
-  const container = document.querySelector('[class*="ViewItemPage-module__"]');
+export function getMobileDePageData(
+  rootElement: HTMLElement | null,
+  url = ''
+): ProductPostItemType | null {
+  if (!rootElement) return null;
+
+  const container =
+    rootElement.querySelector('[class*="ViewItemPage-module__"]');
+
+  console.log('container: ', container);
 
   if (!container) {
     return null;
@@ -38,6 +46,6 @@ export function getMobileDePageData(url = ''): ProductPostItemType | null {
     power: desc?.querySelector('[data-testid=vip-key-features-list-item-power] [class*="KeyFeatures"][class*="value"]')?.textContent || '',
     register: desc?.querySelector('[data-testid=vip-key-features-list-item-firstRegistration] [class*="KeyFeatures"][class*="value"]')?.textContent || '',
     fuel: desc?.querySelector('[data-testid=vip-key-features-list-item-fuel] [class*="KeyFeatures"][class*="value"]')?.textContent || '',
-    engine: removeEmptySymbols(document.querySelector('[data-testid="cubicCapacity-item"] + dd')?.textContent?.replace('ccm', 'куб. см') || ''),
+    engine: removeEmptySymbols(container.querySelector('[data-testid="cubicCapacity-item"] + dd')?.textContent?.replace('ccm', 'куб. см') || ''),
   }
 }

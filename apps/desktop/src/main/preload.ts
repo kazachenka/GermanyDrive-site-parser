@@ -1,5 +1,6 @@
 import electron, {contextBridge, ipcRenderer} from "electron";
 import {ProductPostItemType, UserDto, UserPatchPassword, UserPatchTelegramId} from "@site-parser/shared";
+import {getHtmlByUrlFromWorker} from "./services/parser-api.service";
 
 contextBridge.exposeInMainWorld("auth", {
   getAccessToken: (): Promise<string | null> =>
@@ -32,6 +33,7 @@ contextBridge.exposeInMainWorld("auth", {
 
 contextBridge.exposeInMainWorld("parse", {
   getHtmlByUrlForParse: (siteUrl: string) => electron.ipcRenderer.invoke("parse:get-html-by-url", siteUrl),
+  getHtmlByUrlFromWorker: (siteUrl: string) => electron.ipcRenderer.invoke("parse:get-html-by-url-from-server", siteUrl),
   sentToTelegramTest: (data: ProductPostItemType) => electron.ipcRenderer.invoke("parse:sent-to-telegram-test-mode", data),
   sentToTelegramProd: (data: ProductPostItemType) => electron.ipcRenderer.invoke("parse:sent-to-telegram-prod-mode", data),
 });

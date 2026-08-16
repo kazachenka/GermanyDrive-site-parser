@@ -4,6 +4,10 @@ export async function getHtmlByUrlRequest(url: string): Promise<string> {
   return window.parse.getHtmlByUrlForParse(url);
 }
 
+export async function getHtmlByUrlFromServerForParse(url: string): Promise<string> {
+  return window.parse.getHtmlByUrlFromWorker(url);
+}
+
 export async function sentDataToTelegramTest(data: ProductPostItemType): Promise<void> {
   return window.parse.sentToTelegramTest(data);
 }

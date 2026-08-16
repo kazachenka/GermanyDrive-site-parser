@@ -9,6 +9,7 @@ import { cleanupTempImages } from './jobs/cleanup-temp-images.job'
 import filesRoutes from "./routes/file.routes";
 import { createAuthMiddleware } from "../middleware/auth.middleware";
 import userRoutes from "./routes/user.routes";
+import fetchRequests from "./routes/fetch.routes";
 
 const app = new Hono<AppContext>()
 
@@ -25,6 +26,7 @@ app.route('/auth', authRoutes)
 app.route('/telegram', telegramRoutes)
 app.route('/files', filesRoutes)
 app.route('/user', userRoutes)
+app.route('/fetch', fetchRequests)
 
 export default {
 	async fetch(request: Request, env: Bindings, ctx: ExecutionContext) {

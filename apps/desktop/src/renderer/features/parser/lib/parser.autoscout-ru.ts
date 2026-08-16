@@ -7,7 +7,7 @@ function getOriginalImageUrl(url: string): string {
   return match ? match[1] : url;
 }
 
-export function getAutoscoutPageData(url = ''): ProductPostItemType | null {
+export function getAutoscoutPageData(rootElement: HTMLElement | null, url = ''): ProductPostItemType | null {
   const container = document.querySelector('[class^="DetailPage_detailpage"] [data-cy=stage-section]');
 
   if (!container) {
