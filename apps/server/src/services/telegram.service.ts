@@ -129,7 +129,7 @@ export class PrintMobileDeRuService {
 		}
 
 		optionalLines.push('')
-		optionalLines.push('*Если Вам понравился данный автомобиль, либо хотите получить бесплатную консультацию, обращайтесь к нам - @germanydrive')
+		optionalLines.push('*Если Вам понравился данный автомобиль, либо хотите получить бесплатную консультацию, обращайтесь к нам - @GermanyDrive_by')
 		optionalLines.push('')
 		optionalLines.push('☎️ +375(29)164-99-99')
 		optionalLines.push('')
