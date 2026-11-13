@@ -35,14 +35,25 @@ fetchRequests.post('/fetch-html', async (c) => {
 
 		console.log('Incoming URL to parse:', url);
 
+		const cacheUrl = new URL(`https://internal-cache.local/fetch-html?target=${encodeURIComponent(url)}`);
+		const cacheKey = new Request(cacheUrl.toString(), { method: 'GET' });
+		const cache = caches.default;
+
+		const cachedResponse = await cache.match(cacheKey);
+		if (cachedResponse) {
+			console.log('Cache HIT for URL:', url);
+			const cachedData = await cachedResponse.json();
+			return c.json(cachedData);
+		}
+
+		console.log('Cache MISS for URL. Fetching from ZenRows:', url);
+
 		const ZENROWS_API_KEY = c.env?.ZENROWS_API_KEY;
 
 		const proxyUrl = new URL('https://api.zenrows.com/v1/');
 		proxyUrl.searchParams.append('apikey', ZENROWS_API_KEY);
 		proxyUrl.searchParams.append('url', url);
 		proxyUrl.searchParams.append('premium_proxy', 'true');
-		proxyUrl.searchParams.append('antibot', 'true');
-		proxyUrl.searchParams.append('js_render', 'true');
 		proxyUrl.searchParams.append('proxy_country', 'de');
 
 		const res = await fetch(proxyUrl.toString());
@@ -54,6 +65,15 @@ fetchRequests.post('/fetch-html', async (c) => {
 		}
 
 		const html = await res.text();
+
+		const responseToCache = new Response(JSON.stringify(html), {
+			headers: {
+				'Content-Type': 'application/json',
+				'Cache-Control': 'public, max-age=86400',
+			},
+		});
+
+		c.executionCtx.waitUntil(cache.put(cacheKey, responseToCache));
 
 		return c.json(html);
 
