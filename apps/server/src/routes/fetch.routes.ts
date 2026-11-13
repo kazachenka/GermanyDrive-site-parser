@@ -12,8 +12,7 @@ fetchRequests.post('/fetch-html', async (c) => {
 	proxyUrl.searchParams.append('api_key', SCRAPER_API_KEY);
 	proxyUrl.searchParams.append('url', url);
 	// proxyUrl.searchParams.append('render', 'true');
-	proxyUrl.searchParams.append('premium', 'true');
-	proxyUrl.searchParams.append('country_code', 'de');
+	proxyUrl.searchParams.append('premium', 'false');
 
 	const res = await fetch(proxyUrl.toString());
 
