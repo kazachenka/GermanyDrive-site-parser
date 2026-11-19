@@ -10,7 +10,6 @@ export function AppHeader() {
 
   const handleLogout = async () => {
     try {
-
       await logout();
 
       navigate("/login");
@@ -37,13 +36,23 @@ export function AppHeader() {
         </NavLink>
 
         <NavLink
-          to="/custom-product"
+          to="/custom-upload"
           className={({ isActive }) =>
             `${styles.link} ${isActive ? styles.active : ""}`
           }
           onClick={reset}
         >
           Ручная загрузка
+        </NavLink>
+
+        <NavLink
+          to="/custom-product"
+          className={({ isActive }) =>
+            `${styles.link} ${isActive ? styles.active : ""}`
+          }
+          onClick={reset}
+        >
+          Кастомный продукт
         </NavLink>
 
         {isAdmin && (

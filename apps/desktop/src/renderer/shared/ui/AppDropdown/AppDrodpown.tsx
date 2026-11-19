@@ -12,15 +12,20 @@ interface DropdownProps<T> {
   value: T | null;
   onChange: (value: T) => void;
   placeholder?: string;
+  searchable?: boolean;
+  searchPlaceholder?: string;
 }
 
 export function AppDropdown<T>({
-                                 options,
-                                 value,
-                                 onChange,
-                                 placeholder = "Select...",
-                               }: DropdownProps<T>) {
+  options,
+  value,
+  onChange,
+  placeholder = "Select...",
+  searchable = false,
+  searchPlaceholder = "Поиск...",
+}: DropdownProps<T>) {
   const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
   const [coords, setCoords] = useState({
     top: 0,
     left: 0,
@@ -29,8 +34,21 @@ export function AppDropdown<T>({
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const listRef = useRef<HTMLDivElement | null>(null);
+  const searchInputRef = useRef<HTMLInputElement | null>(null);
 
   const selectedOption = options.find((o) => o.value === value);
+
+  const filteredOptions = searchable
+    ? options.filter((opt) => {
+      const query = search.trim().toLowerCase();
+      if (!query) return true;
+      return (
+        opt.label.toLowerCase().includes(query) ||
+        String(opt.value).toLowerCase().includes(query)
+      );
+    })
+    : options;
 
   const updatePosition = () => {
     if (buttonRef.current) {
@@ -44,14 +62,15 @@ export function AppDropdown<T>({
     }
   };
 
-  // при открытии — вычислить позицию
   useEffect(() => {
     if (open) {
       updatePosition();
+      setSearch("");
+      requestAnimationFrame(() => {
+        searchInputRef.current?.focus();
+      });
     }
   }, [open]);
-
-  const listRef = useRef<HTMLUListElement | null>(null);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -61,7 +80,7 @@ export function AppDropdown<T>({
         wrapperRef.current &&
         !wrapperRef.current.contains(target) &&
         listRef.current &&
-        !listRef.current.contains(target) // ← добавили!
+        !listRef.current.contains(target)
       ) {
         setOpen(false);
       }
@@ -75,6 +94,7 @@ export function AppDropdown<T>({
     <>
       <div ref={wrapperRef} className={styles.wrapper}>
         <button
+          type="button"
           ref={buttonRef}
           onClick={() => setOpen((prev) => !prev)}
           className={styles.input}
@@ -85,8 +105,8 @@ export function AppDropdown<T>({
 
       {open &&
         createPortal(
-          <ul
-            className={styles.list}
+          <div
+            className={styles.listBorder}
             ref={listRef}
             style={{
               position: "absolute",
@@ -96,22 +116,50 @@ export function AppDropdown<T>({
               zIndex: 9999,
             }}
           >
-            {options.map((opt) => (
-              <li
-                key={String(opt.value)}
-                onClick={() => {
-                  onChange(opt.value);
-                  setOpen(false);
-                }}
-                style={{
-                  padding: "10px",
-                  cursor: "pointer",
-                }}
-              >
-                {opt.label}
-              </li>
-            ))}
-          </ul>,
+            {searchable && (
+              <div style={{ padding: "6px" }}>
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  placeholder={searchPlaceholder}
+                  style={{ width: "100%", padding: "6px 8px" }}
+                  className={styles.input}
+                />
+              </div>
+            )}
+            <ul
+              className={styles.list}
+              style={{
+                position: "static",
+                width: "100%",
+              }}
+            >
+              {filteredOptions.length > 0 ? (
+                filteredOptions.map((opt) => (
+                  <li
+                    key={String(opt.value)}
+                    onClick={() => {
+                      onChange(opt.value);
+                      setOpen(false);
+                    }}
+                    style={{
+                      padding: "10px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {opt.label}
+                  </li>
+                ))
+              ) : (
+                <li style={{ padding: "10px", opacity: 0.6 }}>
+                  Ничего не найдено
+                </li>
+              )}
+            </ul>
+          </div>,
           document.body
         )}
     </>

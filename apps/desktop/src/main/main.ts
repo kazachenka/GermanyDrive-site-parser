@@ -5,6 +5,7 @@ import { registerAuthIpcHandlers } from "./ipc/auth"
 import { registerParseIpcHandlers } from "./ipc/parse"
 import { registerVersionIpcHandlers } from "./ipc/version";
 import {registerUserIpcHandlers} from "./ipc/user";
+import {registerCustomProductIpcHandlers} from "./ipc/custom-product";
 
 let mainWindow: BrowserWindow | null = null
 let isUpdating = false
@@ -142,6 +143,7 @@ function setupAutoUpdate() {
 
 app.whenReady().then(() => {
   registerParseIpcHandlers();
+  registerCustomProductIpcHandlers();
   registerAuthIpcHandlers();
   registerVersionIpcHandlers();
   createWindow();

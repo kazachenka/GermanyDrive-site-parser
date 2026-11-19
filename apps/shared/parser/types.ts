@@ -1,3 +1,5 @@
+import { COUNTRIES } from "../countries";
+
 export interface ProductPostItemType {
   url: string;
   imageUrls: string[];
@@ -9,6 +11,22 @@ export interface ProductPostItemType {
   distance: string;
   fuel: string;
   price: string | null;
+}
+
+export interface CustomProductPostItemType {
+  imageUrls: string[];
+  title: string;
+  price: string;
+  packageContents: string;
+  register: string;
+  distance: string;
+  engine: string;
+  power: string;
+  transmission: string;
+  drive: string;
+  color: string;
+  comment: string;
+  flag: COUNTRIES | null;
 }
 
 export type SiteType = typeof SITE_TYPE[keyof typeof SITE_TYPE];

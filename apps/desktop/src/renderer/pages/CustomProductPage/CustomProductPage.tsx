@@ -1,39 +1,38 @@
-import {useSiteParser} from "../../features/parser/model/parser.context.tsx";
-import {AppUploader} from "../../shared/ui/AppUploader/AppUploader.tsx";
+import { AppUploader } from "../../shared/ui/AppUploader/AppUploader.tsx";
 import styles from "./CustomProductPage.module.css";
-import {AppButton} from "../../shared/ui/AppButton/AppButton.tsx";
+import { AppButton } from "../../shared/ui/AppButton/AppButton.tsx";
 import AppModal from "../../shared/ui/AppModal/AppModal.tsx";
-import React, {useEffect, useState} from "react";
-import {AppInput} from "../../shared/ui/AppInput/AppInput.tsx";
-import { ProductPostItemType } from "@site-parser/shared"
-import {AppLoader} from "../../shared/ui/AppLoader/AppLoader.tsx";
-import {AppDropdown} from "../../shared/ui/AppDropdown/AppDrodpown.tsx";
-import {processProductData} from "./utils.ts";
-import {defaultCustomProductState, fuelOptions, transmissionOptions} from "./constants.ts";
+import React, { useEffect, useState } from "react";
+import { AppInput } from "../../shared/ui/AppInput/AppInput.tsx";
+import { CustomProductPostItemType } from "@site-parser/shared"
+import { AppLoader } from "../../shared/ui/AppLoader/AppLoader.tsx";
+import { AppDropdown } from "../../shared/ui/AppDropdown/AppDrodpown.tsx";
+import { countryOptions, driveOptions, transmissionOptions } from "./constants.ts";
+import { useCustomProduct } from "../../features/custom-product/model/custom-product.context.tsx";
+import { defaultCustomProductState } from "../../features/custom-product/model/custom-product.constants.ts";
 
 export function CustomProductPage() {
-  const { state, siteParserLoading ,setSelectedImages ,setProductPrice, setParsedData ,sentToTelegramInTest, sentToTelegramInProd } = useSiteParser();
+  const { state, setImages, setSelectedImages, setData, sentToTelegramInTest, sentToTelegramInProd } = useCustomProduct();
 
-  const [stateData, setStateData] = useState<ProductPostItemType>(state.parsedData ?? defaultCustomProductState);
+  const [stateData, setStateData] = useState<CustomProductPostItemType>(defaultCustomProductState);
 
   useEffect(() => {
-    setParsedData(stateData);
-    setProductPrice(String(stateData.price));
+    setData(stateData);
   }, [stateData]);
 
   const toggleImageSelection = (imageUrl: string) => {
-      if (state.selectedImageUrls.includes(imageUrl)) {
-        return setSelectedImages(state.selectedImageUrls.filter((img) => img !== imageUrl));
-      }
+    if (state.customProductData.imageUrls.includes(imageUrl)) {
+      return setSelectedImages(state.customProductData.imageUrls.filter((img) => img !== imageUrl));
+    }
 
-      if (state.selectedImageUrls.length >= 10) {
-        return setSelectedImages(state.selectedImageUrls);
-      }
+    if (state.customProductData.imageUrls.length >= 10) {
+      return setSelectedImages(state.customProductData.imageUrls);
+    }
 
-      return setSelectedImages([...state.selectedImageUrls, imageUrl]);
+    return setSelectedImages([...state.customProductData.imageUrls, imageUrl]);
   };
 
-  const updateProductSettings = (data: Partial<ProductPostItemType>) => {
+  const updateProductSettings = (data: Partial<CustomProductPostItemType>) => {
     setStateData({
       ...stateData,
       ...data,
@@ -41,20 +40,18 @@ export function CustomProductPage() {
   }
 
   const uploadImages = (images: string[]) => {
-    updateProductSettings({
-      imageUrls: stateData.imageUrls.concat(images),
-    })
+    setImages(images);
   }
 
   const [isOpenModal, setOpenModal] = useState<boolean>(false);
 
   const sentToTelegramTestMode = async () => {
-    sentToTelegramInTest(processProductData(stateData));
+    sentToTelegramInTest(stateData);
   }
 
   const sentToTelegramProdMode = async () => {
     try {
-      sentToTelegramInProd(processProductData(stateData));
+      sentToTelegramInProd(stateData);
       setOpenModal(false);
       setStateData(defaultCustomProductState)
     } catch (error) {
@@ -66,7 +63,7 @@ export function CustomProductPage() {
     setOpenModal(true);
   }
 
-  if (siteParserLoading) {
+  if (state.loading) {
     return <AppLoader />
   }
 
@@ -82,9 +79,19 @@ export function CustomProductPage() {
           })}
         />
 
+        <p className={styles.label}>Страна</p>
+        <AppDropdown
+          options={countryOptions}
+          searchable={true}
+          value={stateData.flag}
+          onChange={(flag) => updateProductSettings({
+            flag: flag,
+          })}
+        >
+        </AppDropdown>
+
         <AppInput
-          label="Цена(€) *"
-          type="number"
+          label="Цена"
           value={stateData.price}
           placeholder="Цена"
           onChange={(e) => updateProductSettings({
@@ -93,25 +100,51 @@ export function CustomProductPage() {
         />
 
         <AppInput
+          label="Комплектация"
+          value={stateData.packageContents}
+          placeholder="Комплектация"
+          onChange={(e) => updateProductSettings({
+            packageContents: e.target.value,
+          })}
+        />
+
+        <AppInput
           label="Регистрация"
           value={stateData.register}
-          placeholder="Регистрация"
+          placeholder="мм/гггг"
           onChange={(e) => updateProductSettings({
             register: e.target.value,
           })}
         />
 
         <AppInput
-          label="Двигатель(куб. см)"
-          type="number"
+          label="Пробег"
+          value={stateData.distance}
+          placeholder="**** км"
+          onChange={(e) => updateProductSettings({
+            distance: e.target.value,
+          })}
+        />
+
+        <AppInput
+          label="Двигатель"
           value={stateData.engine}
-          placeholder="**** куб. cм"
+          placeholder="**** см³, бензин"
           onChange={(e) => updateProductSettings({
             engine: e.target.value,
           })}
         />
 
-        <p className={styles.label}>КПП</p>
+        <AppInput
+          label="Мощность"
+          value={stateData.power}
+          placeholder="**** л.с."
+          onChange={(e) => updateProductSettings({
+            power: e.target.value,
+          })}
+        />
+
+        <p className={styles.label}>Коробка</p>
         <AppDropdown
           options={transmissionOptions}
           value={stateData.transmission}
@@ -121,97 +154,86 @@ export function CustomProductPage() {
         >
         </AppDropdown>
 
-        <AppInput
-          label="Мощность(л. с.)"
-          type="number"
-          value={stateData.power}
-          placeholder="Мощность"
-          onChange={(e) => updateProductSettings({
-            power: e.target.value,
-          })}
-        />
-
-        <AppInput
-          label="Пробег(км)"
-          type="number"
-          value={stateData.distance}
-          placeholder="Пробег"
-          onChange={(e) => updateProductSettings({
-            distance: e.target.value,
-          })}
-        />
-
-        <p className={styles.label}>Топливо</p>
+        <p className={styles.label}>Привод</p>
         <AppDropdown
-          options={fuelOptions}
-          value={stateData.fuel}
-          onChange={(fuel) => updateProductSettings({
-            fuel: fuel,
+          options={driveOptions}
+          value={stateData.drive}
+          onChange={(drive) => updateProductSettings({
+            drive: drive,
           })}
         >
         </AppDropdown>
 
         <AppInput
-          label="Ссылка на продукт"
-          value={stateData.url}
-          placeholder="https://....."
+          label="Цвет"
+          value={stateData.color}
+          placeholder="Цвет"
           onChange={(e) => updateProductSettings({
-            url: e.target.value,
+            color: e.target.value,
+          })}
+        />
+
+        <AppInput
+          label="Коментарий"
+          value={stateData.comment}
+          placeholder="Коментарий"
+          onChange={(e) => updateProductSettings({
+            comment: e.target.value,
           })}
         />
 
         <div className={styles.sectionHeader}>
-          <span>Фото для постинга (загружено {stateData.imageUrls.length})</span>
-           <span className={styles.counter}>
-            Выбрано: {state.selectedImageUrls.length} / 10
+          <span>Фото для постинга (загружено {state.imageUrls.length})</span>
+          <span className={styles.counter}>
+            Выбрано: {state.customProductData.imageUrls.length} / 10
            </span>
         </div>
 
-          {stateData.imageUrls.length > 0 && (
-            <div className={styles.thumbs}>
-              {stateData.imageUrls.map((img, i) => {
-                const selectedIndex = state.selectedImageUrls.indexOf(img);
-                const isSelected = selectedIndex !== -1;
+        {state.imageUrls.length > 0 && (
+          <div className={styles.thumbs}>
+            {state.imageUrls.map((img, i) => {
+              const selectedIndex = state.customProductData.imageUrls.indexOf(img);
+              const isSelected = selectedIndex !== -1;
 
-                return (
-                  <div
-                    key={`${img}-${i}`}
-                    className={`${styles.thumbCard} ${isSelected ? styles.thumbCardSelected : ""}`}
-                    onClick={() => toggleImageSelection(img)}
+              return (
+                <div
+                  key={`${img}-${i}`}
+                  className={`${styles.thumbCard} ${isSelected ? styles.thumbCardSelected : ""}`}
+                  onClick={() => toggleImageSelection(img)}
+                >
+                  <button
+                    type="button"
+                    className={`${styles.thumbButton} ${isSelected ? styles.thumbButtonSelected : ""}`}
                   >
-                    <button
-                      type="button"
-                      className={`${styles.thumbButton} ${isSelected ? styles.thumbButtonSelected : ""}`}
-                    >
-                      <img
-                        src={img}
-                        alt={`car-${i + 1}`}
-                        className={`${styles.thumb} ${isSelected ? styles.thumbSelected : ""}`}
-                      />
+                    <img
+                      src={img}
+                      alt={`car-${i + 1}`}
+                      className={`${styles.thumb} ${isSelected ? styles.thumbSelected : ""}`}
+                    />
 
-                      {isSelected && (
-                        <div className={styles.selectedBadge}>
-                          {selectedIndex + 1}
-                        </div>
-                      )}
-                    </button>
+                    {isSelected && (
+                      <div className={styles.selectedBadge}>
+                        {selectedIndex + 1}
+                      </div>
+                    )}
+                  </button>
 
-                    <div className={styles.checkboxLabel}>
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        className={styles.checkbox}
-                        readOnly
-                      />
-                      <span className={styles.checkboxText}>
+                  <div className={styles.checkboxLabel}>
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      className={styles.checkbox}
+                      readOnly
+                    />
+                    <span className={styles.checkboxText}>
                         {isSelected ? `Выбрано: ${selectedIndex + 1}` : "Выбрать"}
                       </span>
-                    </div>
                   </div>
-                );
-              })}
-              <div className={styles.empty}></div>
-            </div>
+                </div>
+              );
+            })}
+            <div className={styles.empty}></div>
+          </div>
         )}
       </div>
 

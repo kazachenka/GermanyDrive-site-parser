@@ -27,18 +27,23 @@
   transition: all 0.2s ease;
 }
 
-.list {
+.listBorder {
   padding: 0;
   margin: 0;
-  list-style: none;
-  max-height: 220px;
-  overflow-y: auto;
-
   background: var(--bg-primary);
   color: var(--text-primary);
 
   border-radius: var(--radius-md);
   border: 1px solid var(--surface-border);
+}
+
+.list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  overflow-y: auto;
+  max-height: 220px;
+
   scrollbar-width: thin;
   scrollbar-color: rgba(122, 141, 196, 0.7) transparent;
 }

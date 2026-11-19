@@ -17,6 +17,11 @@ declare global {
       onForceLogout: (callback: () => void) => () => void;
     }
 
+    customProduct: {
+      sentToTelegramTest(data: import('@site-parser/shared').CustomProductPostItemType): Promise<void>
+      sentToTelegramProd(data: import('@site-parser/shared').CustomProductPostItemType): Promise<void>
+    }
+
     parse: {
       getHtmlByUrlForParse(siteUrl: string): Promise<string>
       getHtmlByUrlFromWorker(siteUrl: string): Promise<string>

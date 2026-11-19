@@ -1,0 +1,61 @@
+import { ProductPostItemType } from "@site-parser/shared"
+import { DropdownOption } from "../../shared/ui/AppDropdown/AppDrodpown.tsx";
+
+export const defaultCustomUploadState: ProductPostItemType  = {
+  url: '',
+  imageUrls: [],
+  title: '',
+  register: '',
+  engine: '',
+  transmission: 'Механическая',
+  power: '',
+  distance: '',
+  fuel: 'Бензин',
+  price: ''
+}
+
+export const transmissionOptions: DropdownOption<string>[]  = [
+  {
+    label: 'Механическая',
+    value: 'Механическая'
+  },
+  {
+    label: 'Автоматическая',
+    value: 'Автоматическая'
+  },
+  {
+    label: 'Вариатор',
+    value: 'Вариатор'
+  },
+  {
+    label: 'Роботизированная',
+    value: 'Роботизированная'
+  },
+  {
+    label: 'Бесступенчатая',
+    value: 'Бесступенчатая'
+  },
+]
+
+export const fuelOptions: DropdownOption<string>[]  = [
+  {
+    label: 'Бензин',
+    value: 'Бензин'
+  },
+  {
+    label: 'Дизельное топливо',
+    value: 'Дизельное топливо'
+  },
+  {
+    label: 'Газ',
+    value: 'Газ'
+  },
+  {
+    label: 'Электричество',
+    value: 'Электричество'
+  },
+  {
+    label: 'Гибрид (бензин/электричество)',
+    value: 'Гибрид (бензин/электричество)'
+  },
+]

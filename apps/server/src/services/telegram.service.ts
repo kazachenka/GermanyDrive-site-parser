@@ -1,5 +1,5 @@
 import { ProductPostItemType } from '@site-parser/shared'
-import {PRINT_TELEGRAM_LABEL} from "../constants";
+import { PRINT_TELEGRAM_LABEL } from "../constants";
 
 const STYLED_NUMBERS: Record<number, string> = {
 	0: '0️⃣',

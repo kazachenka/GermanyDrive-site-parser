@@ -21,11 +21,11 @@ function formatSpeed(bytesPerSecond?: number) {
 }
 
 export const UpdaterOverlay: React.FC<Props> = ({
-                                                  open,
-                                                  title = "Скачивание обновления...",
-                                                  percent = 0,
-                                                  bytesPerSecond = 0
-                                                }) => {
+  open,
+  title = "Скачивание обновления...",
+  percent = 0,
+  bytesPerSecond = 0
+}) => {
   if (!open) return null
 
   const safePercent = Math.max(0, Math.min(100, percent))

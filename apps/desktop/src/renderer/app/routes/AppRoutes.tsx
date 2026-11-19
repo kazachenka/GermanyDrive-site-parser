@@ -8,6 +8,7 @@ import { RegisterPage } from "../../pages/RegisterPage/RegisterPage.tsx";
 import { HomePage } from "../../pages/HomePage/HomePage.tsx";
 import { ProductPage } from "../../pages/ProductPage/ProductPage.tsx";
 import { AdminPage } from "../../pages/AdminPage/AdminPage.tsx";
+import { CustomUploadPage } from "../../pages/CustomUploadPage/CustomUploadPage.tsx";
 import { CustomProductPage } from "../../pages/CustomProductPage/CustomProductPage.tsx";
 
 export function AppRoutes() {
@@ -60,6 +61,15 @@ export function AppRoutes() {
         element={
           <ProtectedRoute>
             <AdminPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/custom-upload"
+        element={
+          <ProtectedRoute>
+            <CustomUploadPage />
           </ProtectedRoute>
         }
       />

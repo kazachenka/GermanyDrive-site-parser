@@ -28,6 +28,7 @@
   scrollbar-width: thin;
   scrollbar-color: rgba(122, 141, 196, 0.7) transparent;
   gap: 12px;
+  padding-right: 10px;
 }
 
 .thumbButton {
