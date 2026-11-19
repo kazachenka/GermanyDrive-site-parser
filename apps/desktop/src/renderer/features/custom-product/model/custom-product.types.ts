@@ -11,7 +11,7 @@ export interface CustomProductContextValue {
   state: CustomProductState;
   reset: () => void;
   setData: (data: CustomProductPostItemType) => void;
-  setImages: (data: string[]) => void;
+  updateImages: (data: string[]) => void;
   setSelectedImages: (data: string[]) => void;
   loading: boolean;
   sentToTelegramInTest: (data?: CustomProductPostItemType) => void,

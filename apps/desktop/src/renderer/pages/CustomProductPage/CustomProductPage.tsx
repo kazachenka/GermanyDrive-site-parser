@@ -12,7 +12,7 @@ import { useCustomProduct } from "../../features/custom-product/model/custom-pro
 import { defaultCustomProductState } from "../../features/custom-product/model/custom-product.constants.ts";
 
 export function CustomProductPage() {
-  const { state, setImages, setSelectedImages, setData, sentToTelegramInTest, sentToTelegramInProd } = useCustomProduct();
+  const { state, updateImages, setSelectedImages, setData, sentToTelegramInTest, sentToTelegramInProd } = useCustomProduct();
 
   const [stateData, setStateData] = useState<CustomProductPostItemType>(defaultCustomProductState);
 
@@ -40,7 +40,7 @@ export function CustomProductPage() {
   }
 
   const uploadImages = (images: string[]) => {
-    setImages(images);
+    updateImages(images);
   }
 
   const [isOpenModal, setOpenModal] = useState<boolean>(false);

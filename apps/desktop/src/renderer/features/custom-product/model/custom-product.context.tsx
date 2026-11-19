@@ -60,10 +60,10 @@ export function CustomProductProvider({ children }: CustomProductProviderProps):
     }));
   }, []);
 
-  const setImages = useCallback((imageUrls: string[]) => {
+  const updateImages = useCallback((imageUrls: string[]) => {
     dispatchState(prevState => ({
       ...prevState,
-      imageUrls: state.imageUrls.concat(imageUrls)
+      imageUrls: prevState.imageUrls.concat(imageUrls)
     }));
   }, []);
 
@@ -125,12 +125,12 @@ export function CustomProductProvider({ children }: CustomProductProviderProps):
       reset,
       setData,
       setSelectedImages,
-      setImages,
+      updateImages,
       loading: state.loading,
       sentToTelegramInTest,
       sentToTelegramInProd
     }),
-    [state, reset, setData, setSelectedImages, setImages, sentToTelegramInProd, sentToTelegramInTest],
+    [state, reset, setData, setSelectedImages, updateImages, sentToTelegramInProd, sentToTelegramInTest],
   );
 
   return (
